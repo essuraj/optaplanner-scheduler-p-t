@@ -1,11 +1,11 @@
 package com.sc.therapist_appointments.domain;
 
 
+import ai.timefold.solver.core.api.domain.entity.PlanningEntity;
+import ai.timefold.solver.core.api.domain.lookup.PlanningId;
+import ai.timefold.solver.core.api.domain.variable.PlanningVariable;
 import com.sc.therapist_appointments.domain.actors.Patient;
 import com.sc.therapist_appointments.domain.actors.Therapist;
-import org.optaplanner.core.api.domain.entity.PlanningEntity;
-import org.optaplanner.core.api.domain.lookup.PlanningId;
-import org.optaplanner.core.api.domain.variable.PlanningVariable;
 
 @PlanningEntity
 public class Appointment {

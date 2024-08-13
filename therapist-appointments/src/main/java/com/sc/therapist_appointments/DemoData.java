@@ -1,14 +1,14 @@
 package com.sc.therapist_appointments;
 
+import ai.timefold.solver.core.api.score.stream.ConstraintStreamImplType;
+import ai.timefold.solver.core.api.solver.Solver;
+import ai.timefold.solver.core.api.solver.SolverFactory;
+import ai.timefold.solver.core.config.solver.SolverConfig;
 import com.sc.therapist_appointments.domain.Appointment;
 import com.sc.therapist_appointments.domain.Schedule;
 import com.sc.therapist_appointments.domain.Timeslot;
 import com.sc.therapist_appointments.domain.actors.Patient;
 import com.sc.therapist_appointments.domain.actors.Therapist;
-import org.optaplanner.core.api.score.stream.ConstraintStreamImplType;
-import org.optaplanner.core.api.solver.Solver;
-import org.optaplanner.core.api.solver.SolverFactory;
-import org.optaplanner.core.config.solver.SolverConfig;
 
 import java.time.DayOfWeek;
 import java.time.Duration;
@@ -52,7 +52,7 @@ public class DemoData {
         return schedule;
     }
 
-    public static Appointment runSolver() {
+    public static Appointment[] runSolver() {
 
 
         // OptaPlanner configuration
@@ -62,16 +62,17 @@ public class DemoData {
         Schedule solvedSchedule = solver.solve(unsolvedSchedule);
 
         // Extract the next available appointment
-        Appointment nextAvailableAppointment = solvedSchedule.getAppointmentList().stream()
-                .filter(appointment -> appointment.getPatient() == null)
-                .findFirst()
-                .orElse(null);
-        if (nextAvailableAppointment != null) {
-            System.out.println("Next available appointment: " + nextAvailableAppointment);
-            return nextAvailableAppointment;
-        } else {
-            System.out.println("No available appointments found.");
-            return new Appointment();
-        }
+        var nextAvailableAppointment = solvedSchedule.getAppointmentList().toArray();
+//                .filter(appointment -> appointment.getPatient() == null)
+//                .findFirst()
+//                .orElse(null);
+        return (Appointment[]) nextAvailableAppointment;
+//        if (nextAvailableAppointment != null) {
+//            System.out.println("Next available appointment: " + nextAvailableAppointment);
+//            return nextAvailableAppointment;
+//        } else {
+//            System.out.println("No available appointments found.");
+//            return new Appointment()[];
+//        }
     }
 }

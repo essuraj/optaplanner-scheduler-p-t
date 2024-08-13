@@ -1,9 +1,8 @@
 package com.sc.therapist_appointments;
 
-import com.sc.therapist_appointments.domain.Appointment;
-import org.optaplanner.core.api.score.stream.Constraint;
-import org.optaplanner.core.api.score.stream.ConstraintFactory;
-import org.optaplanner.core.api.score.stream.ConstraintProvider;
+import ai.timefold.solver.core.api.score.stream.Constraint;
+import ai.timefold.solver.core.api.score.stream.ConstraintFactory;
+import ai.timefold.solver.core.api.score.stream.ConstraintProvider;
 
 public class AppointmentConstraintProvider implements ConstraintProvider {
 
