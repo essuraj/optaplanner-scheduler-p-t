@@ -1,0 +1,7 @@
+<solver>
+    <solutionClass>com.sc.therapist_appointments.domain.Schedule</solutionClass>
+    <entityClass>com.sc.therapist_appointments.domain.Appointment</entityClass>
+    <scoreDirectorFactory>
+        <constraintProviderClass>com.sc.therapist_appointments.AppointmentConstraintProvider</constraintProviderClass>
+    </scoreDirectorFactory>
+</solver>
