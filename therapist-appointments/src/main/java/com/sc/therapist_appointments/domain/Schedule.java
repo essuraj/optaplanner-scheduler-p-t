@@ -11,8 +11,10 @@ import java.util.List;
 
 @PlanningSolution
 public class Schedule {
+
     @PlanningEntityCollectionProperty
     private List<Appointment> appointmentList;
+    @PlanningEntityCollectionProperty
     @ValueRangeProvider(id = "therapistRange")
     private List<Therapist> therapistList;
     @ValueRangeProvider(id = "timeslotRange")
