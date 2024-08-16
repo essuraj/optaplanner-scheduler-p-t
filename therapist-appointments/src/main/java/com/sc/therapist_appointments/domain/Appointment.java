@@ -11,7 +11,7 @@ import com.sc.therapist_appointments.domain.actors.Therapist;
 public class Appointment {
     @PlanningId
     private Long id;
-
+private String therapyType;
     private Patient patient;
 
     @PlanningVariable(valueRangeProviderRefs = "therapistRange")
@@ -19,11 +19,12 @@ public class Appointment {
     @PlanningVariable(valueRangeProviderRefs = "timeslotRange")
     private Timeslot timeslot;
 
-    public Appointment() {
+    public Appointment( ) {
     }
 
-    public Appointment(long id, Therapist therapist, Patient patient, Timeslot timeslot) {
-        this.id = id;
+    public Appointment(long id, String therapyType, Therapist therapist, Patient patient, Timeslot timeslot) {
+        this.therapyType = therapyType;
+        this.setId(id);
         this.patient = patient;
         this.therapist = therapist;
         this.timeslot = timeslot;
@@ -53,5 +54,21 @@ public class Appointment {
 
     public void setTimeslot(Timeslot timeslot) {
         this.timeslot = timeslot;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getTherapyType() {
+        return therapyType;
+    }
+
+    public void setTherapyType(String therapyType) {
+        this.therapyType = therapyType;
     }
 }

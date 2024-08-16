@@ -1,15 +1,20 @@
 package com.sc.therapist_appointments.domain.actors;
 
+import ai.timefold.solver.core.api.domain.lookup.PlanningId;
+import com.sc.therapist_appointments.domain.Timeslot;
+
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 public class Therapist {
+    @PlanningId
     private String name;
-    private List<LocalDateTime> availability;
+    private List<Timeslot> availability;
     private String location;
     private List<String> skills;
 
-    public Therapist(String name, List<LocalDateTime> availability, String location, List<String> skills) {
+    public Therapist(String name, List<Timeslot> availability, String location, List<String> skills) {
         this.name = name;
         this.availability = availability;
         this.location = location;
@@ -24,11 +29,11 @@ public class Therapist {
         this.name = name;
     }
 
-    public List<LocalDateTime> getAvailability() {
+    public List<Timeslot> getAvailability() {
         return availability;
     }
 
-    public void setAvailability(List<LocalDateTime> availability) {
+    public void setAvailability(List<Timeslot> availability) {
         this.availability = availability;
     }
 
@@ -46,5 +51,23 @@ public class Therapist {
 
     public void setSkills(List<String> skills) {
         this.skills = skills;
+    }
+    @Override
+    public String toString() {
+        return name;
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Therapist employee)) {
+            return false;
+        }
+        return Objects.equals(getName(), employee.getName());
+    }
+    @Override
+    public int hashCode() {
+        return getName().hashCode();
     }
 }
