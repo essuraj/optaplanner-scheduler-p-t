@@ -24,7 +24,7 @@ public class HomeController {
     }
 
     @GetMapping("/run")
-    public Appointment[] run() {
+    public Appointment run() {
         return runSolver();
     }
 }
