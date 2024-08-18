@@ -15,7 +15,7 @@ import static com.sc.therapist_appointments.DemoData.runSolver;
 @RestController
 public class HomeController {
 
-     private static final String template = "Hello, %s!";
+    private static final String template = "Hello, %s!";
     private final AtomicLong counter = new AtomicLong();
 
     @GetMapping("/")

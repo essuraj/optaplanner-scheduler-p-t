@@ -1,25 +1,22 @@
 package com.sc.therapist_appointments.domain;
 
-import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class Timeslot {
-    private DayOfWeek dayOfWeek;
+    private LocalDate date;
     private LocalTime startTime;
     private LocalTime endTime;
 
     public Timeslot() {
     }
 
-    public Timeslot(DayOfWeek dayOfWeek, LocalTime startTime, LocalTime endTime) {
-        this.dayOfWeek = dayOfWeek;
+    public Timeslot(LocalDate date, LocalTime startTime, LocalTime endTime) {
+        this.date = date;
         this.startTime = startTime;
         this.endTime = endTime;
     }
 
-    public DayOfWeek getDayOfWeek() {
-        return dayOfWeek;
-    }
 
     public LocalTime getStartTime() {
         return startTime;
@@ -31,7 +28,7 @@ public class Timeslot {
 
     @Override
     public String toString() {
-        return dayOfWeek + " " + startTime;
+        return date + " " + startTime;
     }
 
 }

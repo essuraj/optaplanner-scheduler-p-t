@@ -1,15 +1,18 @@
 package com.sc.therapist_appointments;
 
+import ai.timefold.solver.core.api.score.buildin.hardsoft.HardSoftScore;
 import ai.timefold.solver.core.api.score.stream.Constraint;
 import ai.timefold.solver.core.api.score.stream.ConstraintFactory;
 import ai.timefold.solver.core.api.score.stream.ConstraintProvider;
+import com.sc.therapist_appointments.domain.Appointment;
 
 public class AppointmentConstraintProvider implements ConstraintProvider {
 
     @Override
     public Constraint[] defineConstraints(ConstraintFactory constraintFactory) {
         return new Constraint[]{
-//            therapyTypeMatch(constraintFactory),
+//                matchTherapyType(constraintFactory),
+
 //            locationMatch(constraintFactory),
 //            availabilityMatch(constraintFactory),
 //          prioritizeCriticality(constraintFactory),
@@ -17,12 +20,11 @@ public class AppointmentConstraintProvider implements ConstraintProvider {
         };
     }
 
-//    private Constraint therapyTypeMatch(ConstraintFactory constraintFactory) {
-//        return constraintFactory.from(Appointment.class)
-//            .filter(appointment -> !appointment.getTherapist().getSkills().contains(appointment.getPatient().getTherapyType()))
-//            .penalize("Therapy type mismatch", HardSoftScore.ONE_HARD);
-//    }
-//
+    private Constraint matchTherapyType(ConstraintFactory constraintFactory) {
+        return constraintFactory.forEach(Appointment.class)
+                .filter(appointment -> !appointment.getTherapist().getSkills().contains(appointment.getPatient().getTherapyType()))
+                .penalize( HardSoftScore.ONE_HARD).asConstraint("mismatch therapy type");
+    }
 //    private Constraint locationMatch(ConstraintFactory constraintFactory) {
 //        return constraintFactory.from(Appointment.class)
 //            .filter(appointment -> !appointment.getTherapist().getLocation().equals(appointment.getPatient().getLocation()))

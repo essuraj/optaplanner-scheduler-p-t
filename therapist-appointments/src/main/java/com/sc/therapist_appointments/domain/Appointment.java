@@ -11,20 +11,20 @@ import com.sc.therapist_appointments.domain.actors.Therapist;
 public class Appointment {
     @PlanningId
     private Long id;
-private String therapyType;
+    @PlanningVariable//(valueRangeProviderRefs = "patientRange")
     private Patient patient;
 
-    @PlanningVariable(valueRangeProviderRefs = "therapistRange")
+    @PlanningVariable//(valueRangeProviderRefs = "therapistRange")
     private Therapist therapist;
-    @PlanningVariable(valueRangeProviderRefs = "timeslotRange")
+    @PlanningVariable//(valueRangeProviderRefs = "timeslotRange")
     private Timeslot timeslot;
 
-    public Appointment( ) {
+    public Appointment() {
     }
 
-    public Appointment(long id, String therapyType, Therapist therapist, Patient patient, Timeslot timeslot) {
-        this.therapyType = therapyType;
-        this.setId(id);
+    public Appointment(long id,   Therapist therapist, Patient patient, Timeslot timeslot) {
+
+        this.id= id;
         this.patient = patient;
         this.therapist = therapist;
         this.timeslot = timeslot;
@@ -64,11 +64,15 @@ private String therapyType;
         this.id = id;
     }
 
-    public String getTherapyType() {
-        return therapyType;
-    }
 
-    public void setTherapyType(String therapyType) {
-        this.therapyType = therapyType;
+
+    @Override
+    public String toString() {
+        return "Appointment{" +
+                "id=" + id +
+                ", patient=" + patient +
+                ", therapist=" + therapist +
+                ", timeslot=" + timeslot +
+                '}';
     }
 }
