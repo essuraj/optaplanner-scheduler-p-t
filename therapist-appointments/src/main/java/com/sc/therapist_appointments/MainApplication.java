@@ -32,26 +32,28 @@ public class MainApplication {
                 // It's recommended to run for at least 5 minutes ("5m") otherwise.
                 .withTerminationSpentLimit(Duration.ofSeconds(5)));
         Solver<Schedule> solver = solverFactory.buildSolver();
-        Schedule unsolvedSchedule = DemoData.generateDemoData(); // Initialize with patients, therapists, and empty appointments
+        Schedule unsolvedSchedule = DemoData.generateDemoData(); // Initialize with patients, therapists, and empty appointments\
+        printSchedule(unsolvedSchedule);
         Schedule solvedSchedule = solver.solve(unsolvedSchedule);
-printSchedule(solvedSchedule);
+        printSchedule(solvedSchedule);
         // Extract the next available appointment
-        Appointment nextAvailableAppointment = solvedSchedule.getAppointmentList().stream()
-                .filter(appointment -> appointment.getPatient() == null)
-                .findFirst()
-                .orElse(null);
+//        Appointment nextAvailableAppointment = solvedSchedule.getAppointmentList().stream()
+//                .filter(appointment -> appointment.getPatient() == null)
+//                .findFirst()
+//                .orElse(null);
 
-        if (nextAvailableAppointment != null) {
-            System.out.println("Next available appointment: " + nextAvailableAppointment);
-//            return nextAvailableAppointment;
-        } else {
-            System.out.println("No available appointments found.");
-//            return new Appointment();
-        }
+//        if (nextAvailableAppointment != null) {
+//            System.out.println("Next available appointment: " + nextAvailableAppointment);
+////            return nextAvailableAppointment;
+//        } else {
+//            System.out.println("No available appointments found.");
+////            return new Appointment();
+//        }
 
     }
+
     private static void printSchedule(Schedule schedule) {
-         var roomList = schedule.getPatientList();
+        var roomList = schedule.getPatientList();
         List<Appointment> appointmentList = schedule.getAppointmentList();
         System.out.println(appointmentList.size() + " appointments");
         Map<Timeslot, Map<Patient, List<Appointment>>> appointmentMap = appointmentList.stream()
@@ -75,11 +77,14 @@ printSchedule(solvedSchedule);
                     })
                     .collect(Collectors.toList());
 
-           System.out.println("| " + String.format("%-10s",
+            System.out.println("| " + String.format("%-10s",
                     timeslot.toString().substring(0, 3) + " " + timeslot.getStartTime()) + " | "
                     + cellList.stream().map(cellLessonList -> String.format("%-10s",
-                            cellLessonList.stream().map(Appointment::getTherapist)
-                                    .map(x->x.getName()).collect(Collectors.joining(", "))))
+                            cellLessonList
+                                    .stream()
+                                    .map(Appointment::getTherapist)
+                                    .map(x -> x.getName())
+                                    .collect(Collectors.joining(", "))))
                     .collect(Collectors.joining(" | "))
                     + " |");
 //           System.out.println("|            | "
@@ -92,16 +97,17 @@ printSchedule(solvedSchedule);
 //                            cellLessonList.stream().map(Appointment::getPatient).collect(Collectors.joining(", "))))
 //                    .collect(Collectors.joining(" | "))
 //                    + " |");
-           System.out.println("|" + "------------|".repeat(roomList.size() + 1));
+            System.out.println("|" + "------------|".repeat(roomList.size() + 1));
         }
         List<Appointment> unassignedLessons = appointmentList.stream()
                 .filter(lesson -> lesson.getTimeslot() == null || lesson.getPatient() == null)
                 .collect(Collectors.toList());
+        System.out.println(unassignedLessons.size() + " unassigned lessons");
         if (!unassignedLessons.isEmpty()) {
-           System.out.println("");
-           System.out.println("Unassigned lessons");
+            System.out.println();
+            System.out.println("Unassigned lessons");
             for (Appointment lesson : unassignedLessons) {
-               System.out.println(lesson);
+                System.out.println(lesson);
             }
         }
     }

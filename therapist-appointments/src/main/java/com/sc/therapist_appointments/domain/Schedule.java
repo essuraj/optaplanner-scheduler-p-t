@@ -40,6 +40,7 @@ public class Schedule {
         this.appointmentList = appointmentList;
         this.patientList = patientList;
     }
+
     public List<Appointment> getAppointmentList() {
         return appointmentList;
     }

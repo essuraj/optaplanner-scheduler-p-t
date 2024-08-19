@@ -1,7 +1,6 @@
 package com.sc.therapist_appointments.domain.actors;
 
 
-
 public class Patient {
     private String name;
     //        private List<LocalDateTime> availability;

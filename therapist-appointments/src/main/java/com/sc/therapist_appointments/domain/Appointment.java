@@ -22,9 +22,9 @@ public class Appointment {
     public Appointment() {
     }
 
-    public Appointment(long id,   Therapist therapist, Patient patient, Timeslot timeslot) {
+    public Appointment(long id, Therapist therapist, Patient patient, Timeslot timeslot) {
 
-        this.id= id;
+        this.id = id;
         this.patient = patient;
         this.therapist = therapist;
         this.timeslot = timeslot;
@@ -63,7 +63,6 @@ public class Appointment {
     public void setId(Long id) {
         this.id = id;
     }
-
 
 
     @Override
