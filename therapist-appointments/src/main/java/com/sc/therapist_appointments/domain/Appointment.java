@@ -4,24 +4,35 @@ package com.sc.therapist_appointments.domain;
 import ai.timefold.solver.core.api.domain.entity.PlanningEntity;
 import ai.timefold.solver.core.api.domain.lookup.PlanningId;
 import ai.timefold.solver.core.api.domain.variable.PlanningVariable;
-import com.sc.therapist_appointments.domain.actors.Patient;
-import com.sc.therapist_appointments.domain.actors.Therapist;
+import com.sc.therapist_appointments.domain.entity.Patient;
+import com.sc.therapist_appointments.domain.entity.Therapist;
+import com.sc.therapist_appointments.domain.entity.Timeslot;
 
 @PlanningEntity
 public class Appointment {
+
     @PlanningId
     private Long id;
-    @PlanningVariable//(valueRangeProviderRefs = "patientRange")
+
+    //    @PlanningVariable(valueRangeProviderRefs = "patientRange")
     private Patient patient;
 
-    @PlanningVariable//(valueRangeProviderRefs = "therapistRange")
+    @PlanningVariable(valueRangeProviderRefs = "therapistRange")
     private Therapist therapist;
-    @PlanningVariable//(valueRangeProviderRefs = "timeslotRange")
+
+    @PlanningVariable(valueRangeProviderRefs = "timeslotRange")
     private Timeslot timeslot;
 
     public Appointment() {
     }
 
+    public Appointment(Patient patient) {
+
+        // assign random integer id
+        this.id = (long) (Math.random() * 10000);
+
+        this.patient = patient;
+    }
     public Appointment(long id, Therapist therapist, Patient patient, Timeslot timeslot) {
 
         this.id = id;

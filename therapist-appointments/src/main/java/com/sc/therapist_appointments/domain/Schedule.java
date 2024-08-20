@@ -6,39 +6,45 @@ import ai.timefold.solver.core.api.domain.solution.PlanningSolution;
 import ai.timefold.solver.core.api.domain.solution.ProblemFactCollectionProperty;
 import ai.timefold.solver.core.api.domain.valuerange.ValueRangeProvider;
 import ai.timefold.solver.core.api.score.buildin.hardsoft.HardSoftScore;
-import com.sc.therapist_appointments.domain.actors.Patient;
-import com.sc.therapist_appointments.domain.actors.Therapist;
+import com.sc.therapist_appointments.domain.entity.Patient;
+import com.sc.therapist_appointments.domain.entity.Therapist;
+import com.sc.therapist_appointments.domain.entity.Timeslot;
 
 import java.util.List;
 
 @PlanningSolution
 public class Schedule {
 
-    @PlanningEntityCollectionProperty
-    private List<Appointment> appointmentList;
+
 
     @ProblemFactCollectionProperty
-    @ValueRangeProvider//(id = "therapistRange")
+    @ValueRangeProvider(id = "therapistRange")
     private List<Therapist> therapistList;
 
     @ProblemFactCollectionProperty
-    @ValueRangeProvider//(id = "timeslotRange")
+    @ValueRangeProvider(id = "timeslotRange")
     private List<Timeslot> timeslotList;
-    @ProblemFactCollectionProperty
-    @ValueRangeProvider//(id = "patientRange")
+
+    //    @ProblemFactCollectionProperty
+//    @ValueRangeProvider(id = "patientRange")
     private List<Patient> patientList;
+
+    @PlanningEntityCollectionProperty
+    private List<Appointment> appointmentList;
+
     @PlanningScore
     private HardSoftScore score;
 
+    // No-arg constructor required for OptaPlanner
     public Schedule() {
     }
 
 
-    public Schedule(List<Timeslot> timeslotList, List<Therapist> therapistList, List<Appointment> appointmentList, List<Patient> patientList) {
+    public Schedule(List<Timeslot> timeslotList, List<Therapist> therapistList, List<Patient> patientList, List<Appointment> appointmentList) {
         this.timeslotList = timeslotList;
         this.therapistList = therapistList;
-        this.appointmentList = appointmentList;
         this.patientList = patientList;
+        this.appointmentList = appointmentList;
     }
 
     public List<Appointment> getAppointmentList() {
@@ -57,14 +63,6 @@ public class Schedule {
         this.therapistList = therapistList;
     }
 
-
-    public HardSoftScore getScore() {
-        return score;
-    }
-
-    public void setScore(HardSoftScore score) {
-        this.score = score;
-    }
 
 
     public List<Patient> getPatientList() {

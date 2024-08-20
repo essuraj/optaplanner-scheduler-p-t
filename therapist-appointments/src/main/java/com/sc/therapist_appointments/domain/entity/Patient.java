@@ -1,17 +1,19 @@
-package com.sc.therapist_appointments.domain.actors;
+package com.sc.therapist_appointments.domain.entity;
 
+
+import java.util.List;
+import java.util.Objects;
 
 public class Patient {
     private String name;
-    //        private List<LocalDateTime> availability;
+    private List<Timeslot> availability;
     private String therapyType;
     private String location;
     private int criticality;
 
-    public Patient(String name, String therapyType, String location,
-                   int criticality) {
+    public Patient(String name, String therapyType, String location, int criticality, List<Timeslot> availability) {
         this.name = name;
-//            this.availability = availability;
+        this.availability = availability;
         this.therapyType = therapyType;
         this.location = location;
         this.criticality = criticality;
@@ -25,12 +27,7 @@ public class Patient {
         this.name = name;
     }
 
-    //        public List<LocalDateTime> getAvailability() {
-//            return availability;
-//        }
-//        public void setAvailability(List<LocalDateTime> availability) {
-//            this.availability = availability;
-//        }
+
     public String getTherapyType() {
         return therapyType;
     }
@@ -56,6 +53,29 @@ public class Patient {
     }
 
 
+    public List<Timeslot> getAvailability() {
+        return availability;
+    }
+
+    public void setAvailability(List<Timeslot> availability) {
+        this.availability = availability;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Patient patient)) {
+            return false;
+        }
+        return Objects.equals(getName(), patient.getName());
+    }
+
+    @Override
+    public int hashCode() {
+        return getName().hashCode();
+    }
 }
  
  

@@ -1,6 +1,4 @@
-package com.sc.therapist_appointments.domain.actors;
-
-import com.sc.therapist_appointments.domain.Timeslot;
+package com.sc.therapist_appointments.domain.entity;
 
 import java.util.List;
 import java.util.Objects;

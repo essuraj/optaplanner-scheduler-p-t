@@ -15,6 +15,7 @@ import static com.sc.therapist_appointments.DemoData.runSolver;
 @RestController
 public class HomeController {
 
+
     private static final String template = "Hello, %s!";
     private final AtomicLong counter = new AtomicLong();
 
@@ -24,7 +25,9 @@ public class HomeController {
     }
 
     @GetMapping("/run")
-    public Appointment run() {
+    public Schedule run() {
         return runSolver();
+
     }
+
 }
