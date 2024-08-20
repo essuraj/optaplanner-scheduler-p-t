@@ -13,14 +13,21 @@ public class AppointmentConstraintProvider implements ConstraintProvider {
 
     @Override
     public Constraint[] defineConstraints(ConstraintFactory constraintFactory) {
-        return new Constraint[]{therapistConflict(constraintFactory), prioritizeCriticality(constraintFactory), therapistPatientConflict(
-                constraintFactory),
+        return new Constraint[]{
                 matchTherapyType(constraintFactory),
+                therapistConflict(constraintFactory),
+//                patientConflict(constraintFactory),
+                prioritizeCriticality(constraintFactory),
+              //  matchPatientSchedule(constraintFactory),
+//                therapistPatientConflict(
+//                constraintFactory),
 //            locationMatch(constraintFactory),
 //            availabilityMatch(constraintFactory),
 //            minimizeProximity(constraintFactory)
         };
     }
+
+
 
     private Constraint therapistConflict(ConstraintFactory constraintFactory) {
         // A therapist can have only 1 appointment at the same time.
@@ -28,22 +35,33 @@ public class AppointmentConstraintProvider implements ConstraintProvider {
                 .join(Appointment.class,
                         Joiners.equal(Appointment::getTimeslot),
                         Joiners.equal(Appointment::getTherapist),
-                        Joiners.lessThan(Appointment::getId))
+                        Joiners.lessThan(Appointment::getId)
+                     )
                 .penalize(HardSoftScore.ONE_HARD)
                 .asConstraint("Therapist conflict");
     }
-
-    private Constraint therapistPatientConflict(ConstraintFactory constraintFactory) {
-        // A therapist can have only 1 appointment at the same time.
-        return constraintFactory.forEach(Appointment.class)
-                                .join(Appointment.class,
-                                      Joiners.equal(Appointment::getTimeslot),
-                                      Joiners.equal(Appointment::getPatient),
-                                      Joiners.equal(Appointment::getTherapist),
-                                      Joiners.lessThan(Appointment::getId))
-                                .penalize(HardSoftScore.ONE_HARD)
-                                .asConstraint("Therapist-Patient conflict");
-    }
+//    private Constraint patientConflict(ConstraintFactory constraintFactory) {
+//        // A therapist can have only 1 appointment at the same time.
+//        return constraintFactory.forEach(Appointment.class)
+//                                .join(Appointment.class,
+//                                      Joiners.equal(Appointment::getTimeslot),
+//                                      Joiners.equal(Appointment::getPatient)
+////                        Joiners.lessThan(Appointment::getId)
+//                                     )
+//                                .penalize(HardSoftScore.ONE_HARD)
+//                                .asConstraint("Patient conflict");
+//    }
+//    private Constraint therapistPatientConflict(ConstraintFactory constraintFactory) {
+//        // A therapist can have only 1 appointment at the same time.
+//        return constraintFactory.forEach(Appointment.class)
+//                                .join(Appointment.class,
+//                                      Joiners.equal(Appointment::getTimeslot),
+//                                      Joiners.equal(Appointment::getPatient),
+//                                      Joiners.equal(Appointment::getTherapist),
+//                                      Joiners.lessThan(Appointment::getId))
+//                                .penalize(HardSoftScore.ONE_HARD)
+//                                .asConstraint("Therapist-Patient conflict");
+//    }
 
     private Constraint matchTherapyType(ConstraintFactory constraintFactory) {
         return constraintFactory.forEach(Appointment.class)
@@ -64,10 +82,10 @@ public class AppointmentConstraintProvider implements ConstraintProvider {
 //    }
 private Constraint prioritizeCriticality(ConstraintFactory constraintFactory) {
     return constraintFactory.forEach(Appointment.class)
-                            .map(Appointment::getPatient)
-                            .penalize(HardSoftScore.ONE_HARD, Patient::getCriticality)
-//                                .penalizeConfigurableLong(Patient::getCriticality)
-                            .asConstraint("prioritize Criticality by patient");
+            .join(Appointment.class,Joiners.equal(Appointment::getTherapist))
+                            .filter((appointment1, appointment2) -> appointment1.getPatient().getCriticality() > appointment2.getPatient().getCriticality())
+                            .reward(HardSoftScore.ONE_SOFT)
+                            .asConstraint("Prioritize Criticality by patient");
 }
 
 

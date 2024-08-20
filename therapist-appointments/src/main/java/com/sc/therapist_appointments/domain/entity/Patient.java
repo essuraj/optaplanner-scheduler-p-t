@@ -76,6 +76,12 @@ public class Patient {
     public int hashCode() {
         return getName().hashCode();
     }
+
+    @Override
+    public String toString() {
+        return "Patient{" + "name='" + name + '\'' + ", availability=" + availability + ", therapyType" +
+                "='" + therapyType + '\'' + ", location='" + location + '\'' + ", criticality=" + criticality + '}';
+    }
 }
  
  

@@ -28,7 +28,7 @@ public class DemoData {
                                                                                           // The solver runs only for 5 seconds on this small dataset.
                                                                                           // It's recommended to run for at least 5 minutes ("5m") otherwise.
                                                                                           .withTerminationSpentLimit(
-                                                                                                  Duration.ofSeconds(15)));
+                                                                                                  Duration.ofSeconds(5)));
 
     public static Schedule generateDemoData() {
         List<Timeslot> timeslotList = new ArrayList<>(10);
@@ -53,7 +53,7 @@ public class DemoData {
         Patient patient2 = new Patient("Patient 2",
                                        "Occupational Therapy",
                                        "HYD",
-                                       1,
+                                       5,
                                        timeslotList.stream().limit(1).collect(Collectors.toList()));
         Patient patient3 = new Patient("Patient 3",
                                        "Occupational Therapy",
@@ -71,64 +71,79 @@ public class DemoData {
                                        1,
                                        timeslotList.stream().limit(1).collect(Collectors.toList()));
 
-        Therapist therapist1 = new Therapist("Therapist 1", Arrays.asList(
-                new Timeslot(LocalDate.of(2024, 9, 11), LocalTime.of(9, 0), LocalTime.of(10, 0)),
-                new Timeslot(LocalDate.of(2024, 9, 11), LocalTime.of(9, 0), LocalTime.of(10, 0))),
+        Therapist therapist1 = new Therapist("Therapist 1",
+                                             Arrays.asList(new Timeslot(LocalDate.of(2024, 9, 11),
+                                                                        LocalTime.of(9, 0),
+                                                                        LocalTime.of(10, 0)),
+                                                           new Timeslot(LocalDate.of(2024, 9, 11),
+                                                                        LocalTime.of(13, 0),
+                                                                        LocalTime.of(16, 0))),
                                              "BLR",
-                                             List.of("Speech Therapy"));
-        Therapist therapist2 = new Therapist("Therapist 2", Arrays.asList(
-                new Timeslot(LocalDate.of(2024, 9, 11), LocalTime.of(9, 0), LocalTime.of(10, 0)),
-                new Timeslot(LocalDate.of(2024, 9, 11), LocalTime.of(9, 0), LocalTime.of(10, 0))), "HYD", List.of("Occupational Therapy"));
-        Therapist therapist3 = new Therapist("Therapist 3", Arrays.asList(
-                new Timeslot(LocalDate.of(2024, 9, 11), LocalTime.of(9, 0), LocalTime.of(10, 0)),
-                new Timeslot(LocalDate.of(2024, 9, 11), LocalTime.of(9, 0), LocalTime.of(10, 0))),
-                "BLR", List.of("Speech Therapy", "Occupational Therapy"));
+                                             List.of("Speech Therapy"),
+                                             10);
+        Therapist therapist2 = new Therapist("Therapist 2",
+                                             Arrays.asList(new Timeslot(LocalDate.of(2024, 9, 11),
+                                                                        LocalTime.of(11, 0),
+                                                                        LocalTime.of(12, 0)),
+                                                           new Timeslot(LocalDate.of(2024, 9, 11),
+                                                                        LocalTime.of(16, 0),
+                                                                        LocalTime.of(18, 0))),
+                                             "HYD",
+                                             List.of("Occupational Therapy"),
+                                             12);
+        Therapist therapist3 = new Therapist("Therapist 3",
+                                             Arrays.asList(new Timeslot(LocalDate.of(2024, 9, 11),
+                                                                        LocalTime.of(9, 0),
+                                                                        LocalTime.of(10, 0)),
+                                                           new Timeslot(LocalDate.of(2024, 9, 11),
+                                                                        LocalTime.of(9, 0),
+                                                                        LocalTime.of(10, 0))),
+                                             "BLR",
+                                             List.of("Speech Therapy", "Occupational Therapy"),
+                                             2);
 
         // generate 10 more therapists
-        Therapist therapist4 = new Therapist("Therapist 4", Arrays.asList(
-                new Timeslot(LocalDate.of(2024, 9, 11), LocalTime.of(9, 0), LocalTime.of(10, 0)),
-                new Timeslot(LocalDate.of(2024, 9, 11), LocalTime.of(9, 0), LocalTime.of(10, 0))),
+        Therapist therapist4 = new Therapist("Therapist 4",
+                                             Arrays.asList(new Timeslot(LocalDate.of(2024, 9, 11),
+                                                                        LocalTime.of(9, 0),
+                                                                        LocalTime.of(10, 0)),
+                                                           new Timeslot(LocalDate.of(2024, 9, 11),
+                                                                        LocalTime.of(9, 0),
+                                                                        LocalTime.of(10, 0))),
                                              "PGT",
-                                             List.of("Speech Therapy"));
-        Therapist therapist5 = new Therapist("Therapist 5", Arrays.asList(
-                new Timeslot(LocalDate.of(2024, 9, 11), LocalTime.of(9, 0), LocalTime.of(10, 0)),
-                new Timeslot(LocalDate.of(2024, 9, 11), LocalTime.of(9, 0), LocalTime.of(10, 0))), "HYD", List.of("Occupational Therapy"));
+                                             List.of("Speech Therapy"),
+                                             3);
+        Therapist therapist5 = new Therapist("Therapist 5",
+                                             Arrays.asList(new Timeslot(LocalDate.of(2024, 9, 11),
+                                                                        LocalTime.of(9, 0),
+                                                                        LocalTime.of(10, 0)),
+                                                           new Timeslot(LocalDate.of(2024, 9, 11),
+                                                                        LocalTime.of(9, 0),
+                                                                        LocalTime.of(10, 0))),
+                                             "HYD",
+                                             List.of("Occupational Therapy"),
+                                             15);
 
 
         Schedule schedule = new Schedule(null, null, null, null);
-        schedule.setTherapistList(Arrays.asList(therapist1, therapist2, therapist3, therapist4, therapist5));
-        schedule.setPatientList(Arrays.asList(patient1, patient5, patient2, patient3, patient4));
-        schedule.setTimeslotList(timeslotList);
-        int i = 0;
-        schedule.setAppointmentList(schedule.getPatientList().stream().map(Appointment::new).toList());
-        //        schedule.setTimeslotList(
-//                Arrays.asList(
-//                        new Timeslot(LocalDate.of(2024,9,11), LocalTime.of(9, 0), LocalTime.of(10, 0)),
-//                new Timeslot(DayOfWeek.TUESDAY, LocalTime.of(9, 0),  LocalTime.of(10, 0))));
-//        schedule.setAppointmentList(List.of(new Appointment(1, therapist1, patient1, timeslotList.get(0)),
-//                new Appointment(2, therapist2, patient2, timeslotList.get(1)),
-//                new Appointment(3, therapist2, patient3, timeslotList.get(2)),
-//                new Appointment(4, therapist1, patient4, timeslotList.get(3))
-//        ));
-//                new Appointment(1, therapist1, patient1, new Timeslot(DayOfWeek.MONDAY, LocalTime.of(9, 0), LocalTime.of(10, 0))),
-//                new Appointment(2, therapist2, patient2, new Timeslot(DayOfWeek.MONDAY, LocalTime.of(9, 0), LocalTime.of(10, 0))),
-//                new Appointment(3, therapist2, patient3, new Timeslot(DayOfWeek.MONDAY, LocalTime.of(10, 30), LocalTime.of(12, 30)))
 
-//        )
-//        );
+        List<Therapist> therapists = Arrays.asList(therapist1, therapist2, therapist3, therapist4, therapist5);
+        List<Patient> patients = Arrays.asList(patient1, patient2, patient3, patient4, patient5);
+
+        patients.forEach(System.out::println);
+        therapists.forEach(System.out::println);
+
+        schedule.setTherapistList(therapists);
+        schedule.setPatientList(patients);
+        schedule.setTimeslotList(timeslotList);
+
+        schedule.setAppointmentList(schedule.getPatientList().stream().map(Appointment::new).toList());
+
         return schedule;
     }
 
     public static Schedule runSolver() {
 
-//        SolverFactory<Schedule> solverFactory = SolverFactory.create(new SolverConfig()
-//                                                                             .withSolutionClass(Schedule.class)
-//                                                                             .withEntityClasses(Appointment.class)
-//                                                                             .withConstraintStreamImplType(ConstraintStreamImplType.BAVET)
-//                                                                             .withConstraintProviderClass(AppointmentConstraintProvider.class)
-//                                                                             // The solver runs only for 5 seconds on this small dataset.
-//                                                                             // It's recommended to run for at least 5 minutes ("5m") otherwise.
-//                                                                             .withTerminationSpentLimit(Duration.ofSeconds(5)));
 
         // Load the problem
         Schedule problem = DemoData.generateDemoData();
@@ -142,25 +157,19 @@ public class DemoData {
 
         // Extract the next available appointment
 
-        if (solvedSchedule != null) {
-            System.out.println("Next available appointment: " + solvedSchedule);
-            return solvedSchedule;
-        } else {
-            System.out.println("No available appointments found.");
-            return new Schedule();
-        }
+
+        return solvedSchedule;
+
     }
 
     private static void printSchedule(Schedule schedule) {
         var roomList = schedule.getPatientList();
         List<Appointment> appointmentList = schedule.getAppointmentList();
         System.out.println(appointmentList.size() + " appointments");
-        Map<Timeslot, Map<Patient, List<Appointment>>> appointmentMap = appointmentList.stream()
-                                                                                       .filter(app -> app.getTimeslot() != null && app.getPatient() != null)
-                                                                                       .collect(Collectors.groupingBy(
-                                                                                               Appointment::getTimeslot,
-                                                                                               Collectors.groupingBy(
-                                                                                                       Appointment::getPatient)));
+        var appointmentMap = appointmentList.stream()
+                                            .filter(app -> app.getTimeslot() != null && app.getPatient() != null)
+                                            .collect(Collectors.groupingBy(Appointment::getTimeslot,
+                                                                           Collectors.groupingBy(Appointment::getPatient)));
         System.out.println("|            | " + roomList.stream()
                                                        .map(room -> String.format("%-10s", room.getName()))
                                                        .collect(Collectors.joining(" | ")) + " |");
@@ -193,21 +202,21 @@ public class DemoData {
                                                                                                                              .collect(
                                                                                                                                      Collectors.joining(
                                                                                                                                              " | ")) + " |");
-//           System.out.println("|            | "
-//                    + cellList.stream().map(cellLessonList -> String.format("%-10s",
-//                            cellLessonList.stream().map(Appointment::getTherapist).collect(Collectors.joining(", "))))
-//                    .collect(Collectors.joining(" | "))
-//                    + " |");
-//           System.out.println("|            | "
-//                    + cellList.stream().map(cellLessonList -> String.format("%-10s",
-//                            cellLessonList.stream().map(Appointment::getPatient).collect(Collectors.joining(", "))))
-//                    .collect(Collectors.joining(" | "))
-//                    + " |");
+            //           System.out.println("|            | "
+            //                    + cellList.stream().map(cellLessonList -> String.format("%-10s",
+            //                            cellLessonList.stream().map(Appointment::getTherapist).collect(Collectors.joining(", "))))
+            //                    .collect(Collectors.joining(" | "))
+            //                    + " |");
+            //           System.out.println("|            | "
+            //                    + cellList.stream().map(cellLessonList -> String.format("%-10s",
+            //                            cellLessonList.stream().map(Appointment::getPatient).collect(Collectors.joining(", "))))
+            //                    .collect(Collectors.joining(" | "))
+            //                    + " |");
             System.out.println("|" + "------------|".repeat(roomList.size() + 1));
         }
         List<Appointment> unassignedLessons = appointmentList.stream()
                                                              .filter(lesson -> lesson.getTimeslot() == null || lesson.getPatient() == null)
-                                                             .collect(Collectors.toList());
+                                                             .toList();
         System.out.println(unassignedLessons.size() + " unassigned appointments");
         if (!unassignedLessons.isEmpty()) {
             System.out.println();

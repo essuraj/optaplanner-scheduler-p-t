@@ -7,15 +7,16 @@ import java.util.Objects;
 public class Therapist {
     private String name;
     private List<Timeslot> availability;
-
+    private int maxTravelDistanceKm;
     private String location;
     private List<String> skills;
 
-    public Therapist(String name, List<Timeslot> availability, String location, List<String> skills) {
+    public Therapist(String name, List<Timeslot> availability, String location, List<String> skills, int maxTravelDistanceKm) {
         this.name = name;
         this.availability = availability;
         this.location = location;
         this.skills = skills;
+        this.maxTravelDistanceKm = maxTravelDistanceKm;
     }
 
     public String getName() {
@@ -52,12 +53,7 @@ public class Therapist {
 
     @Override
     public String toString() {
-        return "Therapist{" +
-                "name='" + name + '\'' +
-                ", availability=" + availability +
-                ", location='" + location + '\'' +
-                ", skills=" + skills +
-                '}';
+        return "Therapist{" + "name='" + name + '\'' + ", availability=" + availability + ", maxTravelDistanceKm=" + maxTravelDistanceKm + ", location='" + location + '\'' + ", skills=" + skills + '}';
     }
 
     @Override
@@ -76,4 +72,11 @@ public class Therapist {
         return getName().hashCode();
     }
 
+    public int getMaxTravelDistanceKm() {
+        return maxTravelDistanceKm;
+    }
+
+    public void setMaxTravelDistanceKm(int maxTravelDistanceKm) {
+        this.maxTravelDistanceKm = maxTravelDistanceKm;
+    }
 }
