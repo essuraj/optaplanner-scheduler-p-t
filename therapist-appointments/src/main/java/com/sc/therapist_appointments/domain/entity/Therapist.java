@@ -53,7 +53,7 @@ public class Therapist {
 
     @Override
     public String toString() {
-        return "Therapist{" + "name='" + name + '\'' + ", availability=" + availability + ", maxTravelDistanceKm=" + maxTravelDistanceKm + ", location='" + location + '\'' + ", skills=" + skills + '}';
+        return "Therapist{" + "name='" + name + '\'' + ", maxTravelKm=" + maxTravelDistanceKm + ", location" + "='" + location + '\'' + ", skills=" + skills + ", availability=" + availability + '}';
     }
 
     @Override

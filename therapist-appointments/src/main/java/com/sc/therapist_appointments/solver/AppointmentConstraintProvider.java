@@ -12,16 +12,8 @@ public class AppointmentConstraintProvider implements ConstraintProvider {
 
     @Override
     public Constraint[] defineConstraints(ConstraintFactory constraintFactory) {
-        return new Constraint[]{matchTherapyType(constraintFactory),
-//                patientConflict(constraintFactory),
-                matchPatientSchedule(constraintFactory), prioritizeCriticality(constraintFactory), therapistConflict(
-                constraintFactory),
-//                therapistPatientConflict(
-//                constraintFactory),
-//            locationMatch(constraintFactory),
-//            availabilityMatch(constraintFactory),
-//            minimizeProximity(constraintFactory)
-        };
+        return new Constraint[]{matchTherapyType(constraintFactory), prioritizeCriticality(constraintFactory), matchPatientSchedule(
+                constraintFactory), therapistConflict(constraintFactory),};
     }
 
 
@@ -29,52 +21,27 @@ public class AppointmentConstraintProvider implements ConstraintProvider {
         // A therapist can have only 1 appointment at the same time.
         return constraintFactory.forEach(Appointment.class)
                                 .join(Appointment.class,
-                                      Joiners.equal(appointment -> appointment.getTimeslot().toString()),
-                                      Joiners.equal(Appointment::getTherapist)
-//,
-//                                      Joiners.lessThan(Appointment::getId)
-                                     )
+                                      Joiners.equal(appointment -> appointment.getTimeslot().getDate()),
+                                      Joiners.equal(Appointment::getTherapist))
                                 .penalize(HardSoftScore.ONE_HARD)
                                 .asConstraint("Therapist conflict");
     }
 
     private Constraint matchPatientSchedule(ConstraintFactory constraintFactory) {
         return constraintFactory.forEach(Appointment.class)
-                                .filter(appointment -> appointment.getPatient()
-                                                                  .getAvailability()
-                                                                  .stream()
-                                                                  .anyMatch(patientTimeslot -> appointment.getTherapist()
-                                                                                                          .getAvailability()
-                                                                                                          .stream()
-                                                                                                          .anyMatch(
-                                                                                                                  therapistTimeslot -> therapistTimeslot.getDate()
-                                                                                                                                                        .equals(patientTimeslot.getDate()) && therapistTimeslot.getStartTime()
-                                                                                                                                                                                                               .equals(patientTimeslot.getStartTime()))))
-                                .reward(HardSoftScore.ONE_HARD)
+                                .filter(appointment -> !appointment.getPatient()
+                                                                   .getAvailability()
+                                                                   .stream()
+                                                                   .anyMatch(patientTimeslot -> appointment.getTherapist()
+                                                                                                           .getAvailability()
+                                                                                                           .stream()
+                                                                                                           .anyMatch(
+                                                                                                                   therapistTimeslot -> therapistTimeslot.getDate()
+                                                                                                                                                         .equals(patientTimeslot.getDate()) && therapistTimeslot.getStartTime()
+                                                                                                                                                                                                                .equals(patientTimeslot.getStartTime()))))
+                                .penalize(HardSoftScore.ONE_HARD)
                                 .asConstraint("Match Availability between Therapist and Patient");
     }
-//    private Constraint patientConflict(ConstraintFactory constraintFactory) {
-//        // A therapist can have only 1 appointment at the same time.
-//        return constraintFactory.forEach(Appointment.class)
-//                                .join(Appointment.class,
-//                                      Joiners.equal(Appointment::getTimeslot),
-//                                      Joiners.equal(Appointment::getPatient)
-////                        Joiners.lessThan(Appointment::getId)
-//                                     )
-//                                .penalize(HardSoftScore.ONE_HARD)
-//                                .asConstraint("Patient conflict");
-//    }
-//    private Constraint therapistPatientConflict(ConstraintFactory constraintFactory) {
-//        // A therapist can have only 1 appointment at the same time.
-//        return constraintFactory.forEach(Appointment.class)
-//                                .join(Appointment.class,
-//                                      Joiners.equal(Appointment::getTimeslot),
-//                                      Joiners.equal(Appointment::getPatient),
-//                                      Joiners.equal(Appointment::getTherapist),
-//                                      Joiners.lessThan(Appointment::getId))
-//                                .penalize(HardSoftScore.ONE_HARD)
-//                                .asConstraint("Therapist-Patient conflict");
-//    }
 
     private Constraint matchTherapyType(ConstraintFactory constraintFactory) {
         return constraintFactory.forEach(Appointment.class)
@@ -85,37 +52,15 @@ public class AppointmentConstraintProvider implements ConstraintProvider {
                                 .asConstraint("mismatch therapy type");
     }
 
-    //    private Constraint locationMatch(ConstraintFactory constraintFactory) {
-//        return constraintFactory.from(Appointment.class)
-//            .filter(appointment -> !appointment.getTherapist().getLocation().equals(appointment.getPatient().getLocation()))
-//            .penalize("Location mismatch", HardSoftScore.ONE_HARD);
-//    }
-//
-//    private Constraint availabilityMatch(ConstraintFactory constraintFactory) {
-//        return constraintFactory.from(Appointment.class)
-//            .filter(appointment -> !appointment.getTherapist().getAvailability().contains(appointment.getStartTime()))
-//            .penalize("Availability mismatch", HardSoftScore.ONE_HARD);
-//    }
+
     private Constraint prioritizeCriticality(ConstraintFactory constraintFactory) {
         return constraintFactory.forEach(Appointment.class)
-                                .join(Appointment.class)
-                                .filter((appointment1, appointment2) -> appointment1.getPatient()
-                                                                                    .getCriticality() > appointment2.getPatient()
-                                                                                                                    .getCriticality())
-                                .reward(HardSoftScore.ONE_HARD)
+
+//
+                                .reward(HardSoftScore.ONE_HARD,
+                                        appointment -> appointment.getPatient().getCriticality())
                                 .asConstraint("Prioritize Criticality by patient");
     }
 
 
-//    private Constraint minimizeProximity(ConstraintFactory constraintFactory) {
-//        return constraintFactory.from(Appointment.class)
-//            .penalize("Minimize proximity", HardSoftScore.ONE_SOFT,
-//                appointment -> calculateDistance(appointment.getPatient().getLocation(), appointment.getTherapist().getLocation()));
-//    }
-//
-//    private int calculateDistance(String location1, String location2) {
-//        // Implement a method to calculate the distance between two locations
-//        // For simplicity, return a dummy value
-//        return (int) (Math.random() * 100); // Replace with actual distance calculation logic
-//    }
 }

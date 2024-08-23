@@ -30,54 +30,98 @@ public class DemoData {
                                                                                           .withTerminationSpentLimit(
                                                                                                   Duration.ofSeconds(5)));
 
-    public static Schedule generateDemoData() {
-        List<Timeslot> timeslotList = new ArrayList<>(10);
-        timeslotList.add(new Timeslot(LocalDate.of(2024, 9, 11), LocalTime.of(8, 30), LocalTime.of(9, 30)));
-        timeslotList.add(new Timeslot(LocalDate.of(2024, 9, 11), LocalTime.of(9, 30), LocalTime.of(10, 30)));
-        timeslotList.add(new Timeslot(LocalDate.of(2024, 9, 11), LocalTime.of(10, 30), LocalTime.of(11, 30)));
-        timeslotList.add(new Timeslot(LocalDate.of(2024, 9, 11), LocalTime.of(13, 30), LocalTime.of(14, 30)));
-        timeslotList.add(new Timeslot(LocalDate.of(2024, 9, 11), LocalTime.of(14, 30), LocalTime.of(15, 30)));
+    // method to generate timeslots for in a gap of 15minutes each for a given start and end date
+    public static List<Timeslot> generateTimeslots(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
+        List<Timeslot> timeslotList = new ArrayList<>();
+        LocalDate currentDate = startDate;
+        while (!currentDate.isAfter(endDate)) {
+            LocalTime currentTime = startTime;
+            while (!currentTime.isAfter(endTime)) {
+                timeslotList.add(new Timeslot(currentDate, currentTime, currentTime.plusHours(1)));
+                currentTime = currentTime.plusMinutes(15);
+            }
+            currentDate = currentDate.plusDays(1);
+        }
+        return timeslotList;
+    }
 
-        timeslotList.add(new Timeslot(LocalDate.of(2024, 9, 12), LocalTime.of(8, 30), LocalTime.of(9, 30)));
-        timeslotList.add(new Timeslot(LocalDate.of(2024, 9, 12), LocalTime.of(9, 30), LocalTime.of(10, 30)));
-        timeslotList.add(new Timeslot(LocalDate.of(2024, 9, 12), LocalTime.of(10, 30), LocalTime.of(12, 30)));
-        timeslotList.add(new Timeslot(LocalDate.of(2024, 9, 12), LocalTime.of(13, 30), LocalTime.of(14, 30)));
-        timeslotList.add(new Timeslot(LocalDate.of(2024, 9, 12), LocalTime.of(14, 30), LocalTime.of(15, 30)));
+    public static Schedule generateDemoData() {
+        var timeslotList = generateTimeslots(LocalDate.of(2024, 9, 11),
+                                             LocalDate.of(2024, 9, 17),
+                                             LocalTime.of(8, 0),
+                                             LocalTime.of(18, 0));
+//        List<Timeslot> timeslotList = new ArrayList<>(10);
+//        timeslotList.add(new Timeslot(LocalDate.of(2024, 9, 11), LocalTime.of(8, 30), LocalTime.of(9, 30)));
+//        timeslotList.add(new Timeslot(LocalDate.of(2024, 9, 11), LocalTime.of(9, 30), LocalTime.of(10, 30)));
+//        timeslotList.add(new Timeslot(LocalDate.of(2024, 9, 11), LocalTime.of(10, 30), LocalTime.of(11, 30)));
+//        timeslotList.add(new Timeslot(LocalDate.of(2024, 9, 11), LocalTime.of(13, 30), LocalTime.of(14, 30)));
+//        timeslotList.add(new Timeslot(LocalDate.of(2024, 9, 11), LocalTime.of(14, 30), LocalTime.of(15, 30)));
+//
+//        timeslotList.add(new Timeslot(LocalDate.of(2024, 9, 12), LocalTime.of(8, 30), LocalTime.of(9, 30)));
+//        timeslotList.add(new Timeslot(LocalDate.of(2024, 9, 12), LocalTime.of(9, 30), LocalTime.of(10, 30)));
+//        timeslotList.add(new Timeslot(LocalDate.of(2024, 9, 12), LocalTime.of(10, 30), LocalTime.of(12, 30)));
+//        timeslotList.add(new Timeslot(LocalDate.of(2024, 9, 12), LocalTime.of(13, 30), LocalTime.of(14, 30)));
+//        timeslotList.add(new Timeslot(LocalDate.of(2024, 9, 12), LocalTime.of(14, 30), LocalTime.of(15, 30)));
 
 
         Patient patient1 = new Patient("Patient 1",
                                        "Speech Therapy",
                                        "BLR",
                                        5,
-                                       timeslotList.stream().limit(5).collect(Collectors.toList()));
+                                       timeslotList.stream()
+                                                   .filter(x -> x.getDate().getDayOfMonth() == 11 && x.getStartTime()
+                                                                                                      .isBefore(
+                                                                                                              LocalTime.of(
+                                                                                                                      12,
+                                                                                                                      00)))
+                                                   .toList());
         Patient patient2 = new Patient("Patient 2",
                                        "Depression Therapy",
                                        "HYD",
                                        5,
-                                       timeslotList.stream().limit(1).collect(Collectors.toList()));
+                                       timeslotList.stream()
+                                                   .filter(x -> x.getDate().getDayOfMonth() == 12 && x.getStartTime()
+                                                                                                      .isAfter(LocalTime.of(
+                                                                                                              12,
+                                                                                                              00)))
+                                                   .toList());
         Patient patient3 = new Patient("Patient 3",
                                        "Occupational Therapy",
                                        "BLR",
-                                       5,
-                                       timeslotList.stream().limit(1).collect(Collectors.toList()));
+                                       1,
+                                       timeslotList.stream()
+                                                   .filter(x -> x.getDate().getDayOfMonth() == 11 && x.getStartTime()
+                                                                                                      .isBefore(
+                                                                                                              LocalTime.of(
+                                                                                                                      12,
+                                                                                                                      00)))
+                                                   .toList());
         Patient patient4 = new Patient("Patient 4",
                                        "Speech Therapy",
                                        "BLR",
                                        2,
-                                       timeslotList.stream().limit(8).collect(Collectors.toList()));
+                                       timeslotList.stream()
+                                                   .filter(x -> x.getDate().getDayOfMonth() == 12 && x.getStartTime()
+                                                                                                      .isAfter(LocalTime.of(
+                                                                                                              12,
+                                                                                                              00)))
+                                                   .toList());
         Patient patient5 = new Patient("Patient 5",
                                        "Occupational Therapy",
                                        "HYD",
-                                       1,
-                                       timeslotList.stream().limit(1).collect(Collectors.toList()));
+                                       5,
+                                       timeslotList.stream()
+                                                   .filter(x -> x.getDate().getDayOfMonth() == 12 && x.getStartTime()
+                                                                                                      .isBefore(
+                                                                                                              LocalTime.of(
+                                                                                                                      18,
+                                                                                                                      00)))
+                                                   .toList());
 
         Therapist therapist1 = new Therapist("Therapist 1",
-                                             Arrays.asList(new Timeslot(LocalDate.of(2024, 9, 11),
-                                                                        LocalTime.of(9, 0),
-                                                                        LocalTime.of(10, 0)),
-                                                           new Timeslot(LocalDate.of(2024, 9, 11),
-                                                                        LocalTime.of(13, 0),
-                                                                        LocalTime.of(16, 0))),
+                                             timeslotList.stream()
+                                                         .filter(x -> x.getDate().getDayOfMonth() == 11)
+                                                         .toList(),
                                              "BLR",
                                              List.of("Speech Therapy"),
                                              10);
