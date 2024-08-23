@@ -51,7 +51,7 @@ public class DemoData {
                                        5,
                                        timeslotList.stream().limit(5).collect(Collectors.toList()));
         Patient patient2 = new Patient("Patient 2",
-                                       "Occupational Therapy",
+                                       "Depression Therapy",
                                        "HYD",
                                        5,
                                        timeslotList.stream().limit(1).collect(Collectors.toList()));
@@ -96,8 +96,8 @@ public class DemoData {
                                                                         LocalTime.of(9, 0),
                                                                         LocalTime.of(10, 0)),
                                                            new Timeslot(LocalDate.of(2024, 9, 11),
-                                                                        LocalTime.of(9, 0),
-                                                                        LocalTime.of(10, 0))),
+                                                                        LocalTime.of(12, 0),
+                                                                        LocalTime.of(13, 0))),
                                              "BLR",
                                              List.of("Speech Therapy", "Occupational Therapy"),
                                              2);
@@ -108,18 +108,18 @@ public class DemoData {
                                                                         LocalTime.of(9, 0),
                                                                         LocalTime.of(10, 0)),
                                                            new Timeslot(LocalDate.of(2024, 9, 11),
-                                                                        LocalTime.of(9, 0),
-                                                                        LocalTime.of(10, 0))),
+                                                                        LocalTime.of(14, 0),
+                                                                        LocalTime.of(15, 0))),
                                              "PGT",
-                                             List.of("Speech Therapy"),
+                                             List.of("Depression Therapy"),
                                              3);
         Therapist therapist5 = new Therapist("Therapist 5",
                                              Arrays.asList(new Timeslot(LocalDate.of(2024, 9, 11),
-                                                                        LocalTime.of(9, 0),
-                                                                        LocalTime.of(10, 0)),
+                                                                        LocalTime.of(1, 0),
+                                                                        LocalTime.of(2, 0)),
                                                            new Timeslot(LocalDate.of(2024, 9, 11),
-                                                                        LocalTime.of(9, 0),
-                                                                        LocalTime.of(10, 0))),
+                                                                        LocalTime.of(19, 0),
+                                                                        LocalTime.of(20, 0))),
                                              "HYD",
                                              List.of("Occupational Therapy"),
                                              15);
@@ -148,6 +148,23 @@ public class DemoData {
         // Load the problem
         Schedule problem = DemoData.generateDemoData();
 
+        // for (Appointment appointment : problem.getAppointmentList()) {
+        //     for (Patient patient : problem.getPatientList()) {
+
+        //         for (Timeslot timeslot : patient.getAvailability()) {
+        //             for (Therapist therapist : problem.getTherapistList()) {
+        //                 for (Timeslot therapistTimeslot : therapist.getAvailability()) {
+        //                     if (timeslot.equals(therapistTimeslot) && timeslot.getStartTime()
+        //                                                                       .equals(therapistTimeslot.getStartTime())) {
+        //                         appointment.setPatient(patient);
+        //                         appointment.setTherapist(therapist);
+        //                         appointment.setTimeslot(timeslot);
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
         // Solve the problem
         Solver<Schedule> solver = solverFactory.buildSolver();
         Schedule solvedSchedule = solver.solve(problem);
