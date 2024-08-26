@@ -1,5 +1,7 @@
 package com.sc.therapist_appointments.domain.entity;
 
+import com.javadocmd.simplelatlng.LatLng;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -8,10 +10,10 @@ public class Therapist {
     private String name;
     private List<Timeslot> availability;
     private int maxTravelDistanceKm;
-    private String location;
+    private LatLng location;
     private List<String> skills;
 
-    public Therapist(String name, List<Timeslot> availability, String location, List<String> skills, int maxTravelDistanceKm) {
+    public Therapist(String name, List<Timeslot> availability, LatLng location, List<String> skills, int maxTravelDistanceKm) {
         this.name = name;
         this.availability = availability;
         this.location = location;
@@ -35,11 +37,11 @@ public class Therapist {
         this.availability = availability;
     }
 
-    public String getLocation() {
+    public LatLng getLocation() {
         return location;
     }
 
-    public void setLocation(String location) {
+    public void setLocation(LatLng location) {
         this.location = location;
     }
 
@@ -53,7 +55,7 @@ public class Therapist {
 
     @Override
     public String toString() {
-        return "Therapist{" + "name='" + name + '\'' + ", maxTravelKm=" + maxTravelDistanceKm + ", location" + "='" + location + '\'' + ", skills=" + skills + ", availability=" + availability + '}';
+        return "TH {" + "name='" + name + '\'' + ", maxTravelKm=" + maxTravelDistanceKm + ", location" + "='" + location + '\'' + ", skills=" + skills + ", availability=" + availability + '}';
     }
 
     @Override

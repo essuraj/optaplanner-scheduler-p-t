@@ -17,6 +17,8 @@ import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.sc.therapist_appointments.utils.RandomLatLngGenerator.getFixedLatLngs;
+
 public class DemoData {
 
     static SolverFactory<Schedule> solverFactory = SolverFactory.create(new SolverConfig().withSolutionClass(Schedule.class)
@@ -47,26 +49,18 @@ public class DemoData {
 
     public static Schedule generateDemoData() {
         var timeslotList = generateTimeslots(LocalDate.of(2024, 9, 11),
-                                             LocalDate.of(2024, 9, 17),
+                                             LocalDate.of(2024, 9, 14),
                                              LocalTime.of(8, 0),
                                              LocalTime.of(18, 0));
-//        List<Timeslot> timeslotList = new ArrayList<>(10);
-//        timeslotList.add(new Timeslot(LocalDate.of(2024, 9, 11), LocalTime.of(8, 30), LocalTime.of(9, 30)));
-//        timeslotList.add(new Timeslot(LocalDate.of(2024, 9, 11), LocalTime.of(9, 30), LocalTime.of(10, 30)));
-//        timeslotList.add(new Timeslot(LocalDate.of(2024, 9, 11), LocalTime.of(10, 30), LocalTime.of(11, 30)));
-//        timeslotList.add(new Timeslot(LocalDate.of(2024, 9, 11), LocalTime.of(13, 30), LocalTime.of(14, 30)));
-//        timeslotList.add(new Timeslot(LocalDate.of(2024, 9, 11), LocalTime.of(14, 30), LocalTime.of(15, 30)));
-//
-//        timeslotList.add(new Timeslot(LocalDate.of(2024, 9, 12), LocalTime.of(8, 30), LocalTime.of(9, 30)));
-//        timeslotList.add(new Timeslot(LocalDate.of(2024, 9, 12), LocalTime.of(9, 30), LocalTime.of(10, 30)));
-//        timeslotList.add(new Timeslot(LocalDate.of(2024, 9, 12), LocalTime.of(10, 30), LocalTime.of(12, 30)));
-//        timeslotList.add(new Timeslot(LocalDate.of(2024, 9, 12), LocalTime.of(13, 30), LocalTime.of(14, 30)));
-//        timeslotList.add(new Timeslot(LocalDate.of(2024, 9, 12), LocalTime.of(14, 30), LocalTime.of(15, 30)));
 
+
+//        LatLng locs = new LatLng(17.3850, 78.4867); // Hyderabad
+        var locs = getFixedLatLngs();
+        //RandomLatLngGenerator.generateRandomLatLngs(14);
 
         Patient patient1 = new Patient("Patient 1",
                                        "Speech Therapy",
-                                       "BLR",
+                                       locs[0],
                                        5,
                                        timeslotList.stream()
                                                    .filter(x -> x.getDate().getDayOfMonth() == 11 && x.getStartTime()
@@ -77,7 +71,7 @@ public class DemoData {
                                                    .toList());
         Patient patient2 = new Patient("Patient 2",
                                        "Depression Therapy",
-                                       "HYD",
+                                       locs[2],
                                        5,
                                        timeslotList.stream()
                                                    .filter(x -> x.getDate().getDayOfMonth() == 12 && x.getStartTime()
@@ -87,7 +81,7 @@ public class DemoData {
                                                    .toList());
         Patient patient3 = new Patient("Patient 3",
                                        "Occupational Therapy",
-                                       "BLR",
+                                       locs[3],
                                        1,
                                        timeslotList.stream()
                                                    .filter(x -> x.getDate().getDayOfMonth() == 11 && x.getStartTime()
@@ -98,7 +92,7 @@ public class DemoData {
                                                    .toList());
         Patient patient4 = new Patient("Patient 4",
                                        "Speech Therapy",
-                                       "BLR",
+                                       locs[4],
                                        2,
                                        timeslotList.stream()
                                                    .filter(x -> x.getDate().getDayOfMonth() == 12 && x.getStartTime()
@@ -108,7 +102,7 @@ public class DemoData {
                                                    .toList());
         Patient patient5 = new Patient("Patient 5",
                                        "Occupational Therapy",
-                                       "HYD",
+                                       locs[5],
                                        5,
                                        timeslotList.stream()
                                                    .filter(x -> x.getDate().getDayOfMonth() == 12 && x.getStartTime()
@@ -122,9 +116,9 @@ public class DemoData {
                                              timeslotList.stream()
                                                          .filter(x -> x.getDate().getDayOfMonth() == 11)
                                                          .toList(),
-                                             "BLR",
+                                             locs[6],
                                              List.of("Speech Therapy"),
-                                             10);
+                                             5);
         Therapist therapist2 = new Therapist("Therapist 2",
                                              Arrays.asList(new Timeslot(LocalDate.of(2024, 9, 11),
                                                                         LocalTime.of(11, 0),
@@ -132,7 +126,7 @@ public class DemoData {
                                                            new Timeslot(LocalDate.of(2024, 9, 11),
                                                                         LocalTime.of(16, 0),
                                                                         LocalTime.of(18, 0))),
-                                             "HYD",
+                                             locs[7],
                                              List.of("Occupational Therapy"),
                                              12);
         Therapist therapist3 = new Therapist("Therapist 3",
@@ -142,9 +136,9 @@ public class DemoData {
                                                            new Timeslot(LocalDate.of(2024, 9, 11),
                                                                         LocalTime.of(12, 0),
                                                                         LocalTime.of(13, 0))),
-                                             "BLR",
+                                             locs[8],
                                              List.of("Speech Therapy", "Occupational Therapy"),
-                                             2);
+                                             12);
 
         // generate 10 more therapists
         Therapist therapist4 = new Therapist("Therapist 4",
@@ -154,7 +148,7 @@ public class DemoData {
                                                            new Timeslot(LocalDate.of(2024, 9, 11),
                                                                         LocalTime.of(14, 0),
                                                                         LocalTime.of(15, 0))),
-                                             "PGT",
+                                             locs[9],
                                              List.of("Depression Therapy"),
                                              3);
         Therapist therapist5 = new Therapist("Therapist 5",
@@ -164,7 +158,7 @@ public class DemoData {
                                                            new Timeslot(LocalDate.of(2024, 9, 11),
                                                                         LocalTime.of(19, 0),
                                                                         LocalTime.of(20, 0))),
-                                             "HYD",
+                                             locs[10],
                                              List.of("Occupational Therapy"),
                                              15);
 

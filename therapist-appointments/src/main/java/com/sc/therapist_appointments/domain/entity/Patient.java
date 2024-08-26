@@ -1,6 +1,8 @@
 package com.sc.therapist_appointments.domain.entity;
 
 
+import com.javadocmd.simplelatlng.LatLng;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -8,10 +10,10 @@ public class Patient {
     private String name;
     private List<Timeslot> availability;
     private String therapyType;
-    private String location;
     private int criticality;
+    private LatLng location;
 
-    public Patient(String name, String therapyType, String location, int criticality, List<Timeslot> availability) {
+    public Patient(String name, String therapyType, LatLng location, int criticality, List<Timeslot> availability) {
         this.name = name;
         this.availability = availability;
         this.therapyType = therapyType;
@@ -36,11 +38,11 @@ public class Patient {
         this.therapyType = therapyType;
     }
 
-    public String getLocation() {
+    public LatLng getLocation() {
         return location;
     }
 
-    public void setLocation(String location) {
+    public void setLocation(LatLng location) {
         this.location = location;
     }
 
@@ -79,8 +81,9 @@ public class Patient {
 
     @Override
     public String toString() {
-        return "Patient{" + "name='" + name + '\'' + ", therapyType" + "='" + therapyType + '\'' + ", location='" + location + '\'' + ", criticality=" + criticality + ", availability=" + availability + '}';
+        return "PA {" + "name='" + name + '\'' + ", therapy" + "='" + therapyType + '\'' + ", location='" + location + '\'' + ", criticality=" + criticality + ", availability=" + availability + '}';
     }
+
 }
  
  

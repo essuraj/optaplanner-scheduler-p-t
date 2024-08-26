@@ -5,6 +5,8 @@ import ai.timefold.solver.core.api.score.stream.Constraint;
 import ai.timefold.solver.core.api.score.stream.ConstraintFactory;
 import ai.timefold.solver.core.api.score.stream.ConstraintProvider;
 import ai.timefold.solver.core.api.score.stream.Joiners;
+import com.javadocmd.simplelatlng.LatLngTool;
+import com.javadocmd.simplelatlng.util.LengthUnit;
 import com.sc.therapist_appointments.domain.Appointment;
 
 
@@ -13,7 +15,7 @@ public class AppointmentConstraintProvider implements ConstraintProvider {
     @Override
     public Constraint[] defineConstraints(ConstraintFactory constraintFactory) {
         return new Constraint[]{matchTherapyType(constraintFactory), prioritizeCriticality(constraintFactory), matchPatientSchedule(
-                constraintFactory), therapistConflict(constraintFactory),};
+                constraintFactory), therapistConflict(constraintFactory), maxTravelDistance(constraintFactory)};
     }
 
 
@@ -62,5 +64,14 @@ public class AppointmentConstraintProvider implements ConstraintProvider {
                                 .asConstraint("Prioritize Criticality by patient");
     }
 
+    private Constraint maxTravelDistance(ConstraintFactory constraintFactory) {
+        return constraintFactory.forEach(Appointment.class)
+                                .filter(appointment -> LatLngTool.distance(appointment.getTherapist().getLocation(),
+                                                                           appointment.getPatient().getLocation(),
+                                                                           LengthUnit.KILOMETER) > appointment.getTherapist()
+                                                                                                              .getMaxTravelDistanceKm())
+                                .penalize(HardSoftScore.ONE_HARD)
+                                .asConstraint("Max Travel Distance");
+    }
 
 }
