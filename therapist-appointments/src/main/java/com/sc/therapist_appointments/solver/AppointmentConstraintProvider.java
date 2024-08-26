@@ -1,6 +1,6 @@
 package com.sc.therapist_appointments.solver;
 
-import ai.timefold.solver.core.api.score.buildin.hardsoft.HardSoftScore;
+import ai.timefold.solver.core.api.score.buildin.hardsoftlong.HardSoftLongScore;
 import ai.timefold.solver.core.api.score.stream.Constraint;
 import ai.timefold.solver.core.api.score.stream.ConstraintFactory;
 import ai.timefold.solver.core.api.score.stream.ConstraintProvider;
@@ -25,23 +25,23 @@ public class AppointmentConstraintProvider implements ConstraintProvider {
                                 .join(Appointment.class,
                                       Joiners.equal(appointment -> appointment.getTimeslot().getDate()),
                                       Joiners.equal(Appointment::getTherapist))
-                                .penalize(HardSoftScore.ONE_HARD)
+                                .penalize(HardSoftLongScore.ONE_HARD)
                                 .asConstraint("Therapist conflict");
     }
 
     private Constraint matchPatientSchedule(ConstraintFactory constraintFactory) {
         return constraintFactory.forEach(Appointment.class)
-                                .filter(appointment -> !appointment.getPatient()
-                                                                   .getAvailability()
-                                                                   .stream()
-                                                                   .anyMatch(patientTimeslot -> appointment.getTherapist()
+                                .filter(appointment -> appointment.getPatient()
+                                                                  .getAvailability()
+                                                                  .stream()
+                                                                  .noneMatch(patientTimeslot -> appointment.getTherapist()
                                                                                                            .getAvailability()
                                                                                                            .stream()
                                                                                                            .anyMatch(
                                                                                                                    therapistTimeslot -> therapistTimeslot.getDate()
                                                                                                                                                          .equals(patientTimeslot.getDate()) && therapistTimeslot.getStartTime()
                                                                                                                                                                                                                 .equals(patientTimeslot.getStartTime()))))
-                                .penalize(HardSoftScore.ONE_HARD)
+                                .penalize(HardSoftLongScore.ONE_HARD)
                                 .asConstraint("Match Availability between Therapist and Patient");
     }
 
@@ -50,18 +50,15 @@ public class AppointmentConstraintProvider implements ConstraintProvider {
                                 .filter(appointment -> !appointment.getTherapist()
                                                                    .getSkills()
                                                                    .contains(appointment.getPatient().getTherapyType()))
-                                .penalize(HardSoftScore.ONE_HARD)
+                                .penalize(HardSoftLongScore.ONE_HARD)
                                 .asConstraint("mismatch therapy type");
     }
 
 
-    private Constraint prioritizeCriticality(ConstraintFactory constraintFactory) {
-        return constraintFactory.forEach(Appointment.class)
-
-//
-                                .reward(HardSoftScore.ONE_HARD,
-                                        appointment -> appointment.getPatient().getCriticality())
-                                .asConstraint("Prioritize Criticality by patient");
+    protected Constraint prioritizeCriticality(ConstraintFactory factory) {
+        return factory.forEach(Appointment.class)
+                      .rewardLong(HardSoftLongScore.ONE_SOFT, appointment -> appointment.getPatient().getCriticality())
+                      .asConstraint("Prioritize Criticality by patient");
     }
 
     private Constraint maxTravelDistance(ConstraintFactory constraintFactory) {
@@ -69,10 +66,10 @@ public class AppointmentConstraintProvider implements ConstraintProvider {
             double distance = LatLngTool.distance(appointment.getTherapist().getLocation(),
                                                   appointment.getPatient().getLocation(),
                                                   LengthUnit.KILOMETER);
-            System.out.println("Distance: " + distance);
-            System.out.println("Max Distance: " + appointment.getTherapist().getMaxTravelDistanceKm());
-            return distance < appointment.getTherapist().getMaxTravelDistanceKm();
-        }).penalize(HardSoftScore.ONE_HARD).asConstraint("Max Travel Distance");
+//            System.out.println("Distance: " + distance);
+//            System.out.println("Max Distance: " + appointment.getTherapist().getMaxTravelDistanceKm());
+            return distance > appointment.getTherapist().getMaxTravelDistanceKm();
+        }).penalize(HardSoftLongScore.ONE_HARD).asConstraint("Max Travel Distance");
     }
 
 }

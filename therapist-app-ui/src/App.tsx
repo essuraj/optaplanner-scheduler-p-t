@@ -10,6 +10,7 @@ import {
 import "leaflet/dist/leaflet.css";
 import { useDemoData, useRun } from "./api/apiComponents";
 import dayjs from "dayjs";
+import { Appointment } from "./api/apiSchemas";
 const fillBlueOptions = { fillColor: "blue", strokeColor: "black" };
 const fillRedOptions = { fillColor: "red" };
 const greenOptions = { color: "green", fillColor: "green" };
@@ -118,19 +119,8 @@ function App() {
               <br />
               <small>{dayjs(item.timeslot?.date).format("DD MMM,YY")}</small>
               <br />
-              <b>
-                 
-                {haversineDistance(
-                  {
-                    latitude: item.therapist!.location!.latitude!,
-                    longitude: item.therapist!.location!.longitude!,
-                  },
-                  {
-                    latitude: item.patient!.location!.latitude!,
-                    longitude: item.patient!.location!.longitude!,
-                  }
-                ).toFixed(2) + " km"}
-              </b>
+              <b>{howFar(item).toFixed(2) + " km"}</b><br/>
+              <small>Therapist can travel max of {item.therapist?.maxTravelDistanceKm + " km"}</small>
             </Tooltip>
           </Polyline>
         ))}
@@ -151,6 +141,19 @@ function App() {
       </pre>
     </>
   );
+
+  function howFar(item: Appointment) {
+    return haversineDistance(
+      {
+        latitude: item.therapist!.location!.latitude!,
+        longitude: item.therapist!.location!.longitude!,
+      },
+      {
+        latitude: item.patient!.location!.latitude!,
+        longitude: item.patient!.location!.longitude!,
+      }
+    );
+  }
 }
 
 export default App;
