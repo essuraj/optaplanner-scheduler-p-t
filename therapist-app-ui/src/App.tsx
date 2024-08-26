@@ -77,6 +77,9 @@ function App() {
             pathOptions={{ color: "green", fillColor: "green" }}
             radius={500}
           >
+             <Tooltip   permanent>
+              <small>{item.criticality} ⚠️</small>
+            </Tooltip>
             <Popup>
               <pre>
                 {JSON.stringify({ ...item, availability: [] }, null, 2)}
@@ -92,6 +95,9 @@ function App() {
             radius={500}
             weight={1}
           >
+            <Tooltip direction="right" offset={[0, 0]} opacity={1} permanent>
+            <small> {item.skills?.join(",")}</small>
+            </Tooltip>
             <Popup>
               <pre>
                 {JSON.stringify({ ...item, availability: [] }, null, 2)}
@@ -102,7 +108,12 @@ function App() {
         {api.data?.appointmentList?.map((item) => (
           <Polyline
             weight={2}
-            pathOptions={{ color: "red" }}
+            pathOptions={{
+              color:
+                howFar(item) > (item.therapist?.maxTravelDistanceKm??0)
+                  ? "red"
+                  : "blue",
+            }}
             positions={[
               [
                 item.patient!.location!.latitude!,
@@ -117,15 +128,19 @@ function App() {
             <Tooltip>
               {item.patient?.name + " --> " + item.therapist?.name}&nbsp;
               <br />
-              <small>{dayjs(item.timeslot?.date).format("DD MMM,YY")}</small>
+              <small>{dayjs(item.timeslot?.date).format("DD MMM,YYYY")} at {JSON.stringify(item.timeslot?.startTime)}</small>
               <br />
-              <b>{howFar(item).toFixed(2) + " km"}</b><br/>
-              <small>Therapist can travel max of {item.therapist?.maxTravelDistanceKm + " km"}</small>
+              <b>{howFar(item).toFixed(2) + " km"}</b>
+              <br />
+              <small>
+                Therapist can travel max of{" "}
+                {item.therapist?.maxTravelDistanceKm + " km"}
+              </small>
             </Tooltip>
           </Polyline>
         ))}
       </MapContainer>
-      <pre>
+      {/* <pre>
         {JSON.stringify(
           api.data?.patientList?.map((x) => x.location),
           null,
@@ -138,7 +153,7 @@ function App() {
           null,
           2
         )}
-      </pre>
+      </pre> */}
     </>
   );
 

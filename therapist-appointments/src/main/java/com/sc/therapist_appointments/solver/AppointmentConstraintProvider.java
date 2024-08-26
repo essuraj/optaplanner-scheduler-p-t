@@ -61,15 +61,28 @@ public class AppointmentConstraintProvider implements ConstraintProvider {
                       .asConstraint("Prioritize Criticality by patient");
     }
 
+//    private Constraint maxTravelDistance(ConstraintFactory constraintFactory) {
+//        return constraintFactory.forEach(Appointment.class).filter(appointment -> {
+//            double distance = LatLngTool.distance(appointment.getTherapist().getLocation(),
+//                                                  appointment.getPatient().getLocation(),
+//                                                  LengthUnit.KILOMETER);
+////            System.out.println("Distance: " + distance);
+////            System.out.println("Max Distance: " + appointment.getTherapist().getMaxTravelDistanceKm());
+//            return distance > appointment.getTherapist().getMaxTravelDistanceKm();
+//        }).penalize(HardSoftLongScore.ONE_HARD).asConstraint("Max Travel Distance");
+//    }
+
     private Constraint maxTravelDistance(ConstraintFactory constraintFactory) {
-        return constraintFactory.forEach(Appointment.class).filter(appointment -> {
-            double distance = LatLngTool.distance(appointment.getTherapist().getLocation(),
-                                                  appointment.getPatient().getLocation(),
-                                                  LengthUnit.KILOMETER);
+        return constraintFactory.forEach(Appointment.class).rewardLong(HardSoftLongScore.ONE_HARD, appointment -> {
+            long distance = Math.round(LatLngTool.distance(appointment.getTherapist().getLocation(),
+                                                           appointment.getPatient().getLocation(),
+                                                           LengthUnit.KILOMETER));
 //            System.out.println("Distance: " + distance);
 //            System.out.println("Max Distance: " + appointment.getTherapist().getMaxTravelDistanceKm());
-            return distance > appointment.getTherapist().getMaxTravelDistanceKm();
-        }).penalize(HardSoftLongScore.ONE_HARD).asConstraint("Max Travel Distance");
+            return (appointment.getTherapist()
+                               .getMaxTravelDistanceKm() - distance) < 0 ? 0 : (appointment.getTherapist()
+                                                                                           .getMaxTravelDistanceKm() - distance);
+        }).asConstraint("Max Travel Distance");
     }
 
 }
