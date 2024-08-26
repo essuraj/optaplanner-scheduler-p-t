@@ -65,13 +65,14 @@ public class AppointmentConstraintProvider implements ConstraintProvider {
     }
 
     private Constraint maxTravelDistance(ConstraintFactory constraintFactory) {
-        return constraintFactory.forEach(Appointment.class)
-                                .filter(appointment -> LatLngTool.distance(appointment.getTherapist().getLocation(),
-                                                                           appointment.getPatient().getLocation(),
-                                                                           LengthUnit.KILOMETER) > appointment.getTherapist()
-                                                                                                              .getMaxTravelDistanceKm())
-                                .penalize(HardSoftScore.ONE_HARD)
-                                .asConstraint("Max Travel Distance");
+        return constraintFactory.forEach(Appointment.class).filter(appointment -> {
+            double distance = LatLngTool.distance(appointment.getTherapist().getLocation(),
+                                                  appointment.getPatient().getLocation(),
+                                                  LengthUnit.KILOMETER);
+            System.out.println("Distance: " + distance);
+            System.out.println("Max Distance: " + appointment.getTherapist().getMaxTravelDistanceKm());
+            return distance < appointment.getTherapist().getMaxTravelDistanceKm();
+        }).penalize(HardSoftScore.ONE_HARD).asConstraint("Max Travel Distance");
     }
 
 }
