@@ -4,4 +4,19 @@
 }
 .patientTip{
   padding: 2px;
+  /* background-color: aqua; */
+  font-weight: bold;
 }
+.tt{
+  padding: 4px; 
+}
+.tt p{
+ margin: 0;
+}
+h1 { font-size: 2.25em; }
+h2 { font-size: 1.9656em; }
+h3 { font-size: 1.7171em; }
+h4 { font-size: 1.5em; }
+h5 { font-size: 1.3104em; }
+h6 { font-size: 1.1447em; }
+small { font-size: .8736em; }

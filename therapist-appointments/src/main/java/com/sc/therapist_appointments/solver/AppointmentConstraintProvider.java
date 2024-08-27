@@ -31,10 +31,10 @@ public class AppointmentConstraintProvider implements ConstraintProvider {
 
     private Constraint matchPatientSchedule(ConstraintFactory constraintFactory) {
         return constraintFactory.forEach(Appointment.class)
-                                .filter(appointment -> appointment.getPatient()
-                                                                  .getAvailability()
-                                                                  .stream()
-                                                                  .noneMatch(patientTimeslot -> appointment.getTherapist()
+                                .filter(appointment -> !appointment.getPatient()
+                                                                   .getAvailability()
+                                                                   .stream()
+                                                                   .anyMatch(patientTimeslot -> appointment.getTherapist()
                                                                                                            .getAvailability()
                                                                                                            .stream()
                                                                                                            .anyMatch(

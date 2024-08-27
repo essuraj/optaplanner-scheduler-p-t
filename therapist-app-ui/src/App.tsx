@@ -10,14 +10,16 @@ import {
 import "leaflet/dist/leaflet.css";
 import { useDemoData, useRun } from "./api/apiComponents";
 import dayjs from "dayjs";
-import { Appointment } from "./api/apiSchemas";
-import { Card, Divider, Loading, Page, Text } from "@geist-ui/core";
+import { Appointment, LocalTime } from "./api/apiSchemas";
+import { Badge, Card, Divider, Loading, Page, Text } from "@geist-ui/core";
 
 export interface Coordinates {
   latitude: number;
   longitude: number;
 }
-
+type IMap = {
+  [key: string]: any[];
+};
 /**
  * Calculates the distance (in kms) between point A and B using earth's radius as the spherical surface
  * @param pointA Coordinates from Point A
@@ -57,12 +59,10 @@ function App() {
   return (
     <Page>
       {api.isLoading && <Loading>Loading</Loading>}
-      <div>
-      {/* {api.data?.patientList!.map((item) => ())} */}
-      </div>
+      <div>{/* {api.data?.patientList!.map((item) => ())} */}</div>
       <MapContainer
         center={[17.419227, 78.510442]}
-        zoom={11}
+        zoom={13}
         scrollWheelZoom={false}
       >
         <TileLayer
@@ -77,8 +77,8 @@ function App() {
             pathOptions={{ color: "green", fillColor: "green" }}
             radius={500}
           >
-            <Tooltip permanent className="patientTip">
-              <small>{item.criticality} ⚠️</small>
+            <Tooltip direction={"top"} permanent className="patientTip">
+              {item.criticality} ★
             </Tooltip>
             <Popup>
               <pre>
@@ -98,6 +98,7 @@ function App() {
             {/* <Tooltip direction="left" offset={[0, 0]} opacity={1} permanent>
             <small> {item.skills?.join(",")}</small>
             </Tooltip> */}
+
             <Popup>
               <pre>
                 {JSON.stringify({ ...item, availability: [] }, null, 2)}
@@ -125,20 +126,85 @@ function App() {
               ],
             ]}
           >
-            <Tooltip>
-              {item.patient?.name + " --> " + item.therapist?.name}&nbsp;
-              <br />
-              <small>
+            <Tooltip className="tt" direction="top">
+              <p>{item.patient?.name + " --> " + item.therapist?.name}</p>
+              <div>
+                {Object.entries(
+                  (item.patient?.availability ?? []).reduce((acc: IMap, x) => {
+                    const date = dayjs(x!.date!).format("DD MMM,YYYY");
+                    if (!acc[date]) {
+                      acc[date] = [];
+                    }
+                    acc[date].push(x!.startTime!);
+                    return acc;
+                  }, {} as IMap)
+                ).map(([date, times]) => (
+                  <div key={date}>
+                    <p
+                      style={{
+                        fontWeight:
+                          dayjs(item.timeslot?.date).format("DD MMM,YYYY") ===
+                          date
+                            ? "bold"
+                            : "normal",
+                      }}
+                    >
+                      {dayjs(item.timeslot?.date).format("DD MMM,YYYY") ===
+                      date ? (
+                        <span>✅</span>
+                      ) : (
+                        <span>🚫</span>
+                      )}
+                      &nbsp;{date}
+                    </p>
+                    <div
+                      style={{ width: 300, display: "flex", flexWrap: "wrap" }}
+                    >
+                      {times.map((time, index) => (
+                        <Badge marginRight={0.5}
+                          type={
+                            dayjs(item.timeslot?.date).format("DD MMM,YYYY") ===
+                              date &&
+                            JSON.stringify(time) ===
+                              JSON.stringify(item.timeslot?.startTime)
+                              ? "success"
+                              : "secondary"
+                          }
+                          key={index}
+                        >
+                          <small>{(time as string).substring(
+                          0,5)
+                          }</small>
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <p>{item.patient?.therapyType}</p>
+              <p>
                 {dayjs(item.timeslot?.date).format("DD MMM,YYYY")} at{" "}
-                {JSON.stringify(item.timeslot?.startTime)}
-              </small>
-              <br />
-              <b>{howFar(item).toFixed(2) + " km"}</b>
-              <br />
-              <small>
-                Therapist can travel max of{" "}
+                {String(item.timeslot?.startTime)}
+              </p>
+             
+
+              <p
+                style={{
+                  color:
+                    howFar(item) > (item.therapist?.maxTravelDistanceKm ?? 0)
+                      ? "red"
+                      : "green",
+                }}
+              >
+                Therapist Max Travel{" = "}
                 {item.therapist?.maxTravelDistanceKm + " km"}
-              </small>
+                <b>{" "}
+                {howFar(item) > (item.therapist?.maxTravelDistanceKm ?? 0)
+                  ? "🚫"
+                  : "✅"} 
+                &nbsp;{howFar(item).toFixed(2) + " km"}
+              </b>
+              </p>
             </Tooltip>
           </Polyline>
         ))}
