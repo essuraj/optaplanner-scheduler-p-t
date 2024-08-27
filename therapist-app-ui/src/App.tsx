@@ -11,10 +11,8 @@ import "leaflet/dist/leaflet.css";
 import { useDemoData, useRun } from "./api/apiComponents";
 import dayjs from "dayjs";
 import { Appointment } from "./api/apiSchemas";
-const fillBlueOptions = { fillColor: "blue", strokeColor: "black" };
-const fillRedOptions = { fillColor: "red" };
-const greenOptions = { color: "green", fillColor: "green" };
-const purpleOptions = { color: "purple" };
+import { Card, Divider, Loading, Page, Text } from "@geist-ui/core";
+
 export interface Coordinates {
   latitude: number;
   longitude: number;
@@ -57,9 +55,11 @@ function App() {
   });
 
   return (
-    <>
-      {api.isLoading && <div>Loading...</div>}
-
+    <Page>
+      {api.isLoading && <Loading>Loading</Loading>}
+      <div>
+      {/* {api.data?.patientList!.map((item) => ())} */}
+      </div>
       <MapContainer
         center={[17.419227, 78.510442]}
         zoom={11}
@@ -77,7 +77,7 @@ function App() {
             pathOptions={{ color: "green", fillColor: "green" }}
             radius={500}
           >
-             <Tooltip   permanent>
+            <Tooltip permanent className="patientTip">
               <small>{item.criticality} ⚠️</small>
             </Tooltip>
             <Popup>
@@ -95,9 +95,9 @@ function App() {
             radius={500}
             weight={1}
           >
-            <Tooltip direction="right" offset={[0, 0]} opacity={1} permanent>
+            {/* <Tooltip direction="left" offset={[0, 0]} opacity={1} permanent>
             <small> {item.skills?.join(",")}</small>
-            </Tooltip>
+            </Tooltip> */}
             <Popup>
               <pre>
                 {JSON.stringify({ ...item, availability: [] }, null, 2)}
@@ -110,7 +110,7 @@ function App() {
             weight={2}
             pathOptions={{
               color:
-                howFar(item) > (item.therapist?.maxTravelDistanceKm??0)
+                howFar(item) > (item.therapist?.maxTravelDistanceKm ?? 0)
                   ? "red"
                   : "blue",
             }}
@@ -128,7 +128,10 @@ function App() {
             <Tooltip>
               {item.patient?.name + " --> " + item.therapist?.name}&nbsp;
               <br />
-              <small>{dayjs(item.timeslot?.date).format("DD MMM,YYYY")} at {JSON.stringify(item.timeslot?.startTime)}</small>
+              <small>
+                {dayjs(item.timeslot?.date).format("DD MMM,YYYY")} at{" "}
+                {JSON.stringify(item.timeslot?.startTime)}
+              </small>
               <br />
               <b>{howFar(item).toFixed(2) + " km"}</b>
               <br />
@@ -154,7 +157,7 @@ function App() {
           2
         )}
       </pre> */}
-    </>
+    </Page>
   );
 
   function howFar(item: Appointment) {
