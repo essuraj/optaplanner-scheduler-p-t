@@ -5,7 +5,7 @@ import ai.timefold.solver.core.api.domain.solution.PlanningScore;
 import ai.timefold.solver.core.api.domain.solution.PlanningSolution;
 import ai.timefold.solver.core.api.domain.solution.ProblemFactCollectionProperty;
 import ai.timefold.solver.core.api.domain.valuerange.ValueRangeProvider;
-import ai.timefold.solver.core.api.score.buildin.hardsoftlong.HardSoftLongScore;
+import ai.timefold.solver.core.api.score.buildin.hardsoft.HardSoftScore;
 import com.sc.therapist_appointments.domain.entity.Patient;
 import com.sc.therapist_appointments.domain.entity.Therapist;
 import com.sc.therapist_appointments.domain.entity.Timeslot;
@@ -32,7 +32,7 @@ public class Schedule {
     private List<Appointment> appointmentList;
 
     @PlanningScore
-    private HardSoftLongScore score;
+    private HardSoftScore score;
 
     // No-arg constructor required for OptaPlanner
     public Schedule() {
@@ -79,11 +79,11 @@ public class Schedule {
         this.timeslotList = timeslotList;
     }
 
-    public HardSoftLongScore getScore() {
+    public HardSoftScore getScore() {
         return score;
     }
 
-    public void setScore(HardSoftLongScore score) {
+    public void setScore(HardSoftScore score) {
         this.score = score;
     }
 

@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 
 @SpringBootTest
-class TherapistAppointmentsApplicationTests {
+class AllTests {
     Schedule sol;
     @Autowired
     private HomeController controller;
@@ -57,7 +57,7 @@ class TherapistAppointmentsApplicationTests {
     @ParameterizedTest
     @MethodSource("getAppointments")
     @DisplayName(value = "Check if all patients have an appointments within their availability")
-    public void validateAppointmentSlots2(Appointment appointment) {
+    public void validateAppointmentSlots(Appointment appointment) {
         System.out.println("Appointment Picked as: " + appointment.getTimeslot());
         System.out.println("------------------------------------------------------------------------");
         assertThat(appointment.getPatient().getAvailability().stream().anyMatch(patientAvailableSlot -> {

@@ -2,7 +2,6 @@ package com.sc.therapist_appointments;
 
 import ai.timefold.solver.core.api.score.stream.ConstraintStreamImplType;
 import ai.timefold.solver.core.api.solver.SolverManager;
-import ai.timefold.solver.core.config.solver.EnvironmentMode;
 import ai.timefold.solver.core.config.solver.SolverConfig;
 import ai.timefold.solver.core.config.solver.SolverManagerConfig;
 import com.sc.therapist_appointments.domain.Appointment;
@@ -26,7 +25,7 @@ public class DemoData {
     static SolverConfig solverConfig = new SolverConfig().withSolutionClass(Schedule.class)
                                                          .withEntityClasses(Appointment.class)
                                                          .withConstraintStreamImplType(ConstraintStreamImplType.BAVET)
-                                                         .withEnvironmentMode(EnvironmentMode.FULL_ASSERT)
+//                                                         .withEnvironmentMode(EnvironmentMode.FULL_ASSERT)
 
                                                          .withConstraintProviderClass(AppointmentConstraintProvider.class)
                                                          // The solver runs only for 5 seconds on this small dataset.
@@ -186,23 +185,7 @@ public class DemoData {
         // Load the problem
         Schedule problem = DemoData.generateDemoData();
 
-        // for (Appointment appointment : problem.getAppointmentList()) {
-        //     for (Patient patient : problem.getPatientList()) {
 
-        //         for (Timeslot timeslot : patient.getAvailability()) {
-        //             for (Therapist therapist : problem.getTherapistList()) {
-        //                 for (Timeslot therapistTimeslot : therapist.getAvailability()) {
-        //                     if (timeslot.equals(therapistTimeslot) && timeslot.getStartTime()
-        //                                                                       .equals(therapistTimeslot.getStartTime())) {
-        //                         appointment.setPatient(patient);
-        //                         appointment.setTherapist(therapist);
-        //                         appointment.setTimeslot(timeslot);
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
         UUID problemId = UUID.randomUUID();
 
         // Solve the problem
@@ -250,14 +233,14 @@ public class DemoData {
                                                     timeslot.toString()
                                                             .substring(0,
                                                                        3) + " " + timeslot.getStartTime()) + " | " + cellList.stream()
-                                                                                                                             .map(cellLessonList -> String.format(
+                                                                                                                             .map(appointments -> String.format(
                                                                                                                                      "%-10s",
-                                                                                                                                     cellLessonList.stream()
-                                                                                                                                                   .map(Appointment::getTherapist)
-                                                                                                                                                   .map(x -> x.getName())
-                                                                                                                                                   .collect(
-                                                                                                                                                           Collectors.joining(
-                                                                                                                                                                   ", "))))
+                                                                                                                                     appointments.stream()
+                                                                                                                                                 .map(Appointment::getTherapist)
+                                                                                                                                                 .map(x -> x.getName())
+                                                                                                                                                 .collect(
+                                                                                                                                                         Collectors.joining(
+                                                                                                                                                                 ", "))))
                                                                                                                              .collect(
                                                                                                                                      Collectors.joining(
                                                                                                                                              " | ")) + " |");

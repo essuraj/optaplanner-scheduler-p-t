@@ -17,10 +17,10 @@ public class Appointment {
     //    @PlanningVariable(valueRangeProviderRefs = "patientRange")
     private Patient patient;
 
-    @PlanningVariable(valueRangeProviderRefs = "therapistRange", allowsUnassigned = true)
+    @PlanningVariable(valueRangeProviderRefs = "therapistRange")
     private Therapist therapist;
 
-    @PlanningVariable(valueRangeProviderRefs = "timeslotRange", allowsUnassigned = true)
+    @PlanningVariable(valueRangeProviderRefs = "timeslotRange")
     private Timeslot timeslot;
 
     public Appointment() {
@@ -81,4 +81,6 @@ public class Appointment {
     public String toString() {
         return "Appointment{" + "id=" + id + ", patient=" + patient.getName() + ", therapist=" + therapist + ", timeslot=" + timeslot + '}';
     }
+
+
 }

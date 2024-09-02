@@ -21,6 +21,7 @@ public class Therapist {
         this.maxTravelDistanceKm = maxTravelDistanceKm;
     }
 
+
     public String getName() {
         return name;
     }

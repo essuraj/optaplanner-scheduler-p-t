@@ -231,7 +231,7 @@ function App() {
             api.data?.appointmentList?.map((item) => (
               <tr key={item.id}>
                  <td>
-                  <p>{item.patient?.name}</p>
+                  <p>{item.patient?.name} ({item.patient?.therapyType})</p>
                   <div
                     style={{ width: 500, padding: "10px" }}
                   >
@@ -297,7 +297,7 @@ function App() {
                   </div>
                 </td>
                 <td>
-                  <p>{item.therapist?.name}</p>
+                  <p>{item.therapist?.name}({item.therapist?.skills?.join(", ")})</p>
                   <div
                     style={{ width: 500, padding: "10px" }}
                   >
