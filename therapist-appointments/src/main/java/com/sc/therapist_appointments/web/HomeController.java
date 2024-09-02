@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static com.sc.therapist_appointments.DemoData.generateDemoData;
@@ -25,7 +26,7 @@ public class HomeController {
     }
 
     @GetMapping("/run")
-    public Schedule run() {
+    public Schedule run() throws ExecutionException, InterruptedException {
         return runSolver();
 
     }

@@ -11,7 +11,15 @@ import "leaflet/dist/leaflet.css";
 import { useDemoData, useRun } from "./api/apiComponents";
 import dayjs from "dayjs";
 import { Appointment, LocalTime } from "./api/apiSchemas";
-import { Badge, Card, Divider, Loading, Page, Text } from "@geist-ui/core";
+import {
+  Badge,
+  Card,
+  Divider,
+  Loading,
+  Page,
+  Table,
+  Text,
+} from "@geist-ui/core";
 
 export interface Coordinates {
   latitude: number;
@@ -161,7 +169,8 @@ function App() {
                       style={{ width: 300, display: "flex", flexWrap: "wrap" }}
                     >
                       {times.map((time, index) => (
-                        <Badge marginRight={0.5}
+                        <Badge
+                          marginRight={0.5}
                           type={
                             dayjs(item.timeslot?.date).format("DD MMM,YYYY") ===
                               date &&
@@ -172,9 +181,7 @@ function App() {
                           }
                           key={index}
                         >
-                          <small>{(time as string).substring(
-                          0,5)
-                          }</small>
+                          <small>{(time as string).substring(0, 5)}</small>
                         </Badge>
                       ))}
                     </div>
@@ -186,7 +193,6 @@ function App() {
                 {dayjs(item.timeslot?.date).format("DD MMM,YYYY")} at{" "}
                 {String(item.timeslot?.startTime)}
               </p>
-             
 
               <p
                 style={{
@@ -198,31 +204,173 @@ function App() {
               >
                 Therapist Max Travel{" = "}
                 {item.therapist?.maxTravelDistanceKm + " km"}
-                <b>{" "}
-                {howFar(item) > (item.therapist?.maxTravelDistanceKm ?? 0)
-                  ? "🚫"
-                  : "✅"} 
-                &nbsp;{howFar(item).toFixed(2) + " km"}
-              </b>
+                <b>
+                  {" "}
+                  {howFar(item) > (item.therapist?.maxTravelDistanceKm ?? 0)
+                    ? "🚫"
+                    : "✅"}
+                  &nbsp;{howFar(item).toFixed(2) + " km"}
+                </b>
               </p>
             </Tooltip>
           </Polyline>
         ))}
       </MapContainer>
-      {/* <pre>
-        {JSON.stringify(
-          api.data?.patientList?.map((x) => x.location),
-          null,
-          2
-        )}
-      </pre>
-      <pre>
-        {JSON.stringify(
-          api.data?.therapistList?.map((x) => x.location),
-          null,
-          2
-        )}
-      </pre> */}
+
+      <table border={1} style={{outline:"none"}}>
+        <thead>
+          <tr>
+            <td>Patient</td>
+            <td>Therapist</td>
+            <td>Therapy Type</td>
+            <td>Appointment Date</td>
+          </tr>
+        </thead>
+        <tbody>
+          {api.data &&
+            api.data?.appointmentList?.map((item) => (
+              <tr key={item.id}>
+                 <td>
+                  <p>{item.patient?.name}</p>
+                  <div
+                    style={{ width: 500, padding: "10px" }}
+                  >
+                    {Object.entries(
+                      (item.patient?.availability ?? []).reduce(
+                        (acc: IMap, x) => {
+                          const date = dayjs(x!.date!).format("DD MMM,YYYY");
+                          if (!acc[date]) {
+                            acc[date] = [];
+                          }
+                          acc[date].push(x!.startTime!);
+                          return acc;
+                        },
+                        {} as IMap
+                      )
+                    ).map(([date, times]) => (
+                      <div key={date}>
+                        <p
+                          style={{
+                            fontWeight:
+                              dayjs(item.timeslot?.date).format(
+                                "DD MMM,YYYY"
+                              ) === date
+                                ? "bold"
+                                : "normal",
+                          }}
+                        >
+                          {dayjs(item.timeslot?.date).format("DD MMM,YYYY") ===
+                          date ? (
+                            <span>✅</span>
+                          ) : (
+                            <span>🚫</span>
+                          )}
+                          &nbsp;{date}
+                        </p>
+                        <div
+                          style={{
+                            width: 300,
+                            display: "flex",
+                            flexWrap: "wrap",
+                          }}
+                        >
+                          {times.map((time, index) => (
+                            <Badge
+                              marginRight={0.5}
+                              type={
+                                dayjs(item.timeslot?.date).format(
+                                  "DD MMM,YYYY"
+                                ) === date &&
+                                JSON.stringify(time) ===
+                                  JSON.stringify(item.timeslot?.startTime)
+                                  ? "success"
+                                  : "secondary"
+                              }
+                              key={index}
+                            >
+                              <small>{(time as string).substring(0, 5)}</small>
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </td>
+                <td>
+                  <p>{item.therapist?.name}</p>
+                  <div
+                    style={{ width: 500, padding: "10px" }}
+                  >
+                    {Object.entries(
+                      (item.therapist?.availability ?? []).reduce(
+                        (acc: IMap, x) => {
+                          const date = dayjs(x!.date!).format("DD MMM,YYYY");
+                          if (!acc[date]) {
+                            acc[date] = [];
+                          }
+                          acc[date].push(x!.startTime!);
+                          return acc;
+                        },
+                        {} as IMap
+                      )
+                    ).map(([date, times]) => (
+                      <div key={date}>
+                        <p
+                          style={{
+                            fontWeight:
+                              dayjs(item.timeslot?.date).format(
+                                "DD MMM,YYYY"
+                              ) === date
+                                ? "bold"
+                                : "normal",
+                          }}
+                        >
+                          {dayjs(item.timeslot?.date).format("DD MMM,YYYY") ===
+                          date ? (
+                            <span>✅</span>
+                          ) : (
+                            <span>🚫</span>
+                          )}
+                          &nbsp;{date}
+                        </p>
+                        <div
+                          style={{
+                            width: 300,
+                            display: "flex",
+                            flexWrap: "wrap",
+                          }}
+                        >
+                          {times.map((time, index) => (
+                            <Badge
+                              marginRight={0.5}
+                              type={
+                                dayjs(item.timeslot?.date).format(
+                                  "DD MMM,YYYY"
+                                ) === date &&
+                                JSON.stringify(time) ===
+                                  JSON.stringify(item.timeslot?.startTime)
+                                  ? "success"
+                                  : "secondary"
+                              }
+                              key={index}
+                            >
+                              <small>{(time as string).substring(0, 5)}</small>
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </td>
+               
+                <td>{item.patient?.therapyType}</td>
+                <td>{dayjs(item.timeslot?.date).format("DD MMM,YYYY")}</td>
+              </tr>
+            ))}
+        </tbody>
+      </table>
+
+      <pre>{JSON.stringify(api.data?.appointmentList, null, 2)}</pre>
     </Page>
   );
 

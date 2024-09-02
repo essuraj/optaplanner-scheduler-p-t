@@ -79,5 +79,13 @@ public class Schedule {
         this.timeslotList = timeslotList;
     }
 
+    public HardSoftLongScore getScore() {
+        return score;
+    }
+
+    public void setScore(HardSoftLongScore score) {
+        this.score = score;
+    }
+
     // Getters and setters
 }
