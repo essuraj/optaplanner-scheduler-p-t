@@ -5,11 +5,11 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
-public class Timeslot {
+public class Timeslot implements Comparable<Timeslot> {
+    DateTimeFormatter formatters = DateTimeFormatter.ofPattern("dd/MM/uuuu");
     private LocalDate date;
     private LocalTime startTime;
     private LocalTime endTime;
-    DateTimeFormatter formatters = DateTimeFormatter.ofPattern("dd/MM/uuuu");
 
     public Timeslot() {
     }
@@ -65,6 +65,11 @@ public class Timeslot {
     @Override
     public int hashCode() {
         return toString().hashCode();
+    }
+
+    @Override
+    public int compareTo(Timeslot o) {
+        return getDate().compareTo(o.getDate());
     }
 
 }

@@ -95,7 +95,7 @@ public class AppointmentConstraintProvider implements ConstraintProvider {
                                           appointment -> appointment.getTherapist()
                                                                     .getSkills()
                                                                     .contains(appointment.getPatient()
-                                                                                         .getTherapyType()) ? 0 : 100)
+                                                                                         .getTherapyType()) ? 0 : 300)
 
                                 .asConstraint("Missing therapy type");
     }
@@ -103,7 +103,7 @@ public class AppointmentConstraintProvider implements ConstraintProvider {
 
     protected Constraint prioritizeCriticality(ConstraintFactory factory) {
         return factory.forEach(Appointment.class)
-                      .reward(HardSoftScore.ONE_SOFT, appointment -> appointment.getPatient().getCriticality() * 100)
+                      .reward(HardSoftScore.ONE_SOFT, appointment -> appointment.getPatient().getCriticality() * 10000)
                       .asConstraint("Prioritize Criticality by patient");
     }
 

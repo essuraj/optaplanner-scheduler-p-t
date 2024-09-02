@@ -14,6 +14,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -38,6 +39,9 @@ class AllTests {
         assertThat(controller).isNotNull();
     }
 
+    private List<Appointment> getAppointments() {
+        return sol.getAppointmentList();
+    }
 
     @ParameterizedTest
     @MethodSource("getAppointments")
@@ -79,7 +83,32 @@ class AllTests {
         })).isTrue();
     }
 
-    private List<Appointment> getAppointments() {
-        return sol.getAppointmentList();
+    @ParameterizedTest
+    @MethodSource("getAppointments")
+    @DisplayName(value = "Check if all patients have an appointments matched to the right skill of the therapist")
+    public void validateAppointmentSkills(Appointment appointment) {
+
+        assertThat(appointment.getTherapist().getSkills()).contains(appointment.getPatient().getTherapyType());
+    }
+
+    @Test
+    @DisplayName(value = "Check if patient is being prioritized based on criticality")
+    public void validateCriticality() {
+        var sortedAppointments = getAppointments().stream()
+                                                  .sorted(Comparator.comparing(appointment -> appointment.getTimeslot()
+                                                                                                         .getDate()))
+                                                  .toList();
+        sortedAppointments.forEach(appointment -> {
+            System.out.println("Patient: " + appointment.getPatient()
+                                                        .getName() + " Criticality: " + appointment.getPatient()
+                                                                                                   .getCriticality());
+        });
+        System.out.println("Unsorted");
+        getAppointments().forEach(appointment -> {
+            System.out.println("Patient: " + appointment.getPatient()
+                                                        .getName() + " Criticality: " + appointment.getPatient()
+                                                                                                   .getCriticality());
+        });
+
     }
 }
