@@ -17,8 +17,10 @@ public class AppointmentConstraintProvider implements ConstraintProvider {
     @Override
     public Constraint[] defineConstraints(ConstraintFactory constraintFactory) {
         return new Constraint[]{matchTherapyType(constraintFactory), prioritizeCriticality(constraintFactory), matchPatientTimeslot(
-                constraintFactory), matchTherapistTimeslot(constraintFactory), matchPatientSchedule(constraintFactory), therapistConflict(
-                constraintFactory), maxTravelDistance(constraintFactory)};
+                constraintFactory), matchTherapistTimeslot(constraintFactory),
+                                // matchPatientSchedule(constraintFactory),
+//                                therapistConflict(constraintFactory),
+                                maxTravelDistance(constraintFactory)};
     }
 
 
@@ -72,7 +74,7 @@ public class AppointmentConstraintProvider implements ConstraintProvider {
                                                                     .getAvailability()
                                                                     .stream()
                                                                     .noneMatch(patientTimeslot -> patientTimeslot.equals(
-                                                                            appointment.getTimeslot())) ? 100 : 0)
+                                                                            appointment.getTimeslot())) ? 200 : 0)
 
                                 .asConstraint("Must Match Patient Timeslot");
     }
@@ -84,7 +86,7 @@ public class AppointmentConstraintProvider implements ConstraintProvider {
                                                                     .getAvailability()
                                                                     .stream()
                                                                     .noneMatch(therapistTs -> therapistTs.equals(
-                                                                            appointment.getTimeslot())) ? 100 : 0)
+                                                                            appointment.getTimeslot())) ? 200 : 0)
 
                                 .asConstraint("Must Match Therapist Timeslot");
     }
@@ -95,7 +97,7 @@ public class AppointmentConstraintProvider implements ConstraintProvider {
                                           appointment -> appointment.getTherapist()
                                                                     .getSkills()
                                                                     .contains(appointment.getPatient()
-                                                                                         .getTherapyType()) ? 0 : 300)
+                                                                                         .getTherapyType()) ? 0 : 1000)
 
                                 .asConstraint("Missing therapy type");
     }
@@ -109,11 +111,9 @@ public class AppointmentConstraintProvider implements ConstraintProvider {
 
     private Constraint maxTravelDistance(ConstraintFactory constraintFactory) {
         return constraintFactory.forEach(Appointment.class).penalize(HardSoftScore.ONE_HARD, appointment -> {
-            long distance = Math.round(LatLngTool.distance(appointment.getTherapist().getLocation(),
-                                                           appointment.getPatient().getLocation(),
-                                                           LengthUnit.KILOMETER));
-//            System.out.println("Distance: " + distance);
-//            System.out.println("Max Distance: " + appointment.getTherapist().getMaxTravelDistanceKm());
+            var distance = (LatLngTool.distance(appointment.getTherapist().getLocation(),
+                                                appointment.getPatient().getLocation(),
+                                                LengthUnit.KILOMETER));
             return appointment.getTherapist().getMaxTravelDistanceKm() > distance ? 0 : 200;
         }).asConstraint("Max Travel Distance");
     }

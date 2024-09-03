@@ -79,7 +79,7 @@ public class Appointment {
 
     @Override
     public String toString() {
-        return "Appointment{" + "id=" + id + ", patient=" + patient.getName() + ", therapist=" + therapist + ", timeslot=" + timeslot + '}';
+        return "Appointment{" + "id=" + id + ", patient=" + patient + ", therapist=" + therapist + ", timeslot=" + timeslot + '}';
     }
 
 

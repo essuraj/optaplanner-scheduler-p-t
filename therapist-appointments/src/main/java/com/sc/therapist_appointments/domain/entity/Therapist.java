@@ -56,7 +56,7 @@ public class Therapist {
 
     @Override
     public String toString() {
-        return "TH {" + "name='" + name + '\'' + ", maxTravelKm=" + maxTravelDistanceKm + ", location" + "='" + location + '\'' + ", skills=" + skills + ", availability=" + availability + '}';
+        return "TH {" + "name='" + name + '\'' + ", maxTravelKm=" + maxTravelDistanceKm + ", location" + "='" + location + '\'' + ", skills=" + skills + '}';
     }
 
     @Override

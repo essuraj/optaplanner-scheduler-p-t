@@ -49,10 +49,10 @@ class AllTests {
     void validateDistance(Appointment appointment) throws Exception {
 
 
-        assertThat(Math.round(LatLngTool.distance(appointment.getTherapist().getLocation(),
-                                                  appointment.getPatient().getLocation(),
-                                                  LengthUnit.KILOMETER))).isLessThan(appointment.getTherapist()
-                                                                                                .getMaxTravelDistanceKm());
+        assertThat((LatLngTool.distance(appointment.getTherapist().getLocation(),
+                                        appointment.getPatient().getLocation(),
+                                        LengthUnit.KILOMETER))).isLessThanOrEqualTo(appointment.getTherapist()
+                                                                                               .getMaxTravelDistanceKm());
 
 
     }

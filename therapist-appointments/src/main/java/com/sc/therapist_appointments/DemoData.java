@@ -195,6 +195,7 @@ public class DemoData {
 //        System.out.println(solverManager.);
 
         // Visualize the solution
+//        printScheduleSimple(solvedSchedule);
         printSchedule(solvedSchedule);
 
         // Extract the next available appointment
@@ -202,6 +203,12 @@ public class DemoData {
 
         return solvedSchedule;
 
+    }
+
+    private static void printScheduleSimple(Schedule schedule) {
+        for (var app : schedule.getAppointmentList()) {
+            System.out.println(app);
+        }
     }
 
     private static void printSchedule(Schedule schedule) {
