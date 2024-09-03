@@ -31,7 +31,7 @@ class AllTests {
     @BeforeAll
     public void setUpFixture() throws ExecutionException, InterruptedException {
         assertThat(controller).isNotNull();
-        sol = controller.run();
+        sol = controller.run().getSchedule();
     }
 
     @Test
@@ -49,10 +49,11 @@ class AllTests {
     void validateDistance(Appointment appointment) throws Exception {
 
 
-        assertThat((LatLngTool.distance(appointment.getTherapist().getLocation(),
+        assertThat((LatLngTool.distance(appointment.getTherapist()
+                                                   .getLocation(),
                                         appointment.getPatient().getLocation(),
-                                        LengthUnit.KILOMETER))).isLessThanOrEqualTo(appointment.getTherapist()
-                                                                                               .getMaxTravelDistanceKm());
+                                        LengthUnit.KILOMETER))).isLessThanOrEqualTo(
+                appointment.getTherapist().getMaxTravelDistanceKm());
 
 
     }
@@ -63,24 +64,30 @@ class AllTests {
     @DisplayName(value = "Must match patient/therapist availability")
     public void validateAppointmentSlots(Appointment appointment) {
         System.out.println("Appointment Picked as: " + appointment.getTimeslot());
-        System.out.println("------------------------------------------------------------------------");
-        assertThat(appointment.getPatient().getAvailability().stream().anyMatch(patientAvailableSlot -> {
-            boolean match = patientAvailableSlot.getDate()
-                                                .equals(appointment.getTimeslot()
-                                                                   .getDate()) && patientAvailableSlot.getStartTime()
-                                                                                                      .equals(appointment.getTimeslot()
-                                                                                                                         .getStartTime());
-            if (match) {
-                System.out.println(patientAvailableSlot + " v " + appointment.getTimeslot());
-                System.out.println("Therapist: " + appointment.getTherapist()
-                                                              .getName() + " Patient: " + appointment.getPatient()
-                                                                                                     .getName());
-                System.out.println("===================================================================");
-            } else {
-                System.err.println(patientAvailableSlot + " v " + appointment.getTimeslot());
-            }
-            return match;
-        })).isTrue();
+        System.out.println(
+                "------------------------------------------------------------------------");
+        assertThat(appointment.getPatient()
+                              .getAvailability()
+                              .stream()
+                              .anyMatch(patientAvailableSlot -> {
+                                  boolean match = patientAvailableSlot.getDate()
+                                                                      .equals(appointment.getTimeslot()
+                                                                                         .getDate()) && patientAvailableSlot.getStartTime()
+                                                                                                                            .equals(appointment.getTimeslot()
+                                                                                                                                               .getStartTime());
+                                  if (match) {
+                                      System.out.println(patientAvailableSlot + " v " + appointment.getTimeslot());
+                                      System.out.println("Therapist: " + appointment.getTherapist()
+                                                                                    .getName() + " Patient: " + appointment.getPatient()
+                                                                                                                           .getName());
+                                      System.out.println(
+                                              "===================================================================");
+                                  }
+                                  else {
+                                      System.err.println(patientAvailableSlot + " v " + appointment.getTimeslot());
+                                  }
+                                  return match;
+                              })).isTrue();
     }
 
     @ParameterizedTest
@@ -88,15 +95,18 @@ class AllTests {
     @DisplayName(value = "Must match right skill of the therapist")
     public void validateAppointmentSkills(Appointment appointment) {
 
-        assertThat(appointment.getTherapist().getSkills()).contains(appointment.getPatient().getTherapyType());
+        assertThat(appointment.getTherapist()
+                              .getSkills()).contains(appointment.getPatient()
+                                                                .getTherapyType());
     }
 
     @Test
     @DisplayName(value = "Prioritized based on criticality")
     public void validateCriticality() {
         var sortedAppointments = getAppointments().stream()
-                                                  .sorted(Comparator.comparing(appointment -> appointment.getTimeslot()
-                                                                                                         .getDate()))
+                                                  .sorted(Comparator.comparing(
+                                                          appointment -> appointment.getTimeslot()
+                                                                                    .getDate()))
                                                   .toList();
         sortedAppointments.forEach(appointment -> {
             System.out.println("Patient: " + appointment.getPatient()

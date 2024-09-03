@@ -15,7 +15,6 @@ public class MainApplication {
         SpringApplication.run(MainApplication.class, args);
 
         LOGGER.info("Starting the application");
-//        DemoData.runSolver();
     }
 
 

@@ -24,8 +24,7 @@ public class Schedule {
     @ValueRangeProvider(id = "timeslotRange")
     private List<Timeslot> timeslotList;
 
-    //    @ProblemFactCollectionProperty
-//    @ValueRangeProvider(id = "patientRange")
+ 
     private List<Patient> patientList;
 
     @PlanningEntityCollectionProperty

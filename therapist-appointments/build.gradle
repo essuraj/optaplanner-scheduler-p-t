@@ -19,13 +19,10 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'ai.timefold.solver:timefold-solver-core:1.12.0'
+    implementation 'ai.timefold.solver:timefold-solver-core:1.13.0'
     testImplementation 'ch.qos.logback:logback-classic:1.5.6'
-//    implementation 'org.springframework.boot:spring-boot-starter-security'
 
-// https://mvnrepository.com/artifact/com.javadocmd/simplelatlng
     implementation 'com.javadocmd:simplelatlng:1.4.0'
-// https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

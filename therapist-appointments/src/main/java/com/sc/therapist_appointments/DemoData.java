@@ -10,6 +10,7 @@ import ai.timefold.solver.core.config.solver.SolverConfig;
 import ai.timefold.solver.core.config.solver.SolverManagerConfig;
 import com.sc.therapist_appointments.domain.Appointment;
 import com.sc.therapist_appointments.domain.Schedule;
+import com.sc.therapist_appointments.domain.SolveResponse;
 import com.sc.therapist_appointments.domain.entity.Patient;
 import com.sc.therapist_appointments.domain.entity.Therapist;
 import com.sc.therapist_appointments.domain.entity.Timeslot;
@@ -219,7 +220,7 @@ public class DemoData {
         return schedule;
     }
 
-    public static Schedule runSolver() throws ExecutionException, InterruptedException {
+    public static SolveResponse runSolver() throws ExecutionException, InterruptedException {
 
         SolutionManager<Schedule, HardSoftScore> solutionManager = SolutionManager.create(
                 SolverFactory.create(solverConfig));
@@ -238,6 +239,22 @@ public class DemoData {
                 solvedSchedule);
         System.out.println(scoreAnalysis.summarize());
         System.out.println(scoreAnalysis.constraintAnalyses());
+        scoreAnalysis.constraintMap()
+                     .forEach((constraintRef, constraintAnalysis) -> {
+                         String constraintId = constraintRef.constraintId();
+                         HardSoftScore scorePerConstraint = constraintAnalysis.score();
+                         int matchCount = constraintAnalysis.matchCount();
+                         System.out.println("--------> " + constraintId + " = " + scorePerConstraint);
+                         constraintAnalysis.matches().forEach(matchAnalysis -> {
+                             HardSoftScore scorePerMatch = matchAnalysis.score();
+                             var justification = matchAnalysis.justification();
+                             System.out.println(justification);
+                             System.err.println(scorePerMatch);
+                             System.out.println(
+                                     "_____________________________________");
+                         });
+
+                     });
 
 //        System.out.println(solverManager.);
 
@@ -248,7 +265,7 @@ public class DemoData {
         // Extract the next available appointment
 
 
-        return solvedSchedule;
+        return new SolveResponse(solvedSchedule, scoreAnalysis);
 
     }
 

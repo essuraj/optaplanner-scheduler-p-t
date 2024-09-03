@@ -13,6 +13,42 @@ export type Appointment = {
   timeslot?: Timeslot;
 };
 
+export type ConstraintAnalysisHardSoftScore = {
+  constraintRef?: ConstraintRef;
+  weight?: HardSoftScore;
+  score?: HardSoftScore;
+  matches?: MatchAnalysisHardSoftScore[];
+};
+
+export type ConstraintJustification = Record<string, any>;
+
+export type ConstraintRef = {
+  packageName?: string;
+  constraintName?: string;
+  constraintId?: string;
+};
+
+export type HardSoftScore = {
+  /**
+   * @format int32
+   * @deprecated true
+   */
+  initScore?: number;
+  /**
+   * @format int32
+   * @deprecated true
+   */
+  hardScore?: number;
+  /**
+   * @format int32
+   * @deprecated true
+   */
+  softScore?: number;
+  feasible?: boolean;
+  zero?: boolean;
+  solutionInitialized?: boolean;
+};
+
 export type LatLng = {
   /**
    * @format double
@@ -22,6 +58,7 @@ export type LatLng = {
    * @format double
    */
   longitude?: number;
+  polar?: boolean;
   /**
    * @format int64
    */
@@ -30,7 +67,6 @@ export type LatLng = {
    * @format int64
    */
   longitudeInternal?: number;
-  polar?: boolean;
 };
 
 export type LocalTime = {
@@ -52,6 +88,12 @@ export type LocalTime = {
   nano?: number;
 };
 
+export type MatchAnalysisHardSoftScore = {
+  constraintRef?: ConstraintRef;
+  score?: HardSoftScore;
+  justification?: ConstraintJustification;
+};
+
 export type Patient = {
   name?: string;
   availability?: Timeslot[];
@@ -68,6 +110,20 @@ export type Schedule = {
   timeslotList?: Timeslot[];
   patientList?: Patient[];
   appointmentList?: Appointment[];
+  score?: HardSoftScore;
+};
+
+export type ScoreAnalysisHardSoftScore = {
+  score?: HardSoftScore;
+  constraintMap?: {
+    [key: string]: ConstraintAnalysisHardSoftScore;
+  };
+  solutionInitialized?: boolean;
+};
+
+export type SolveResponse = {
+  schedule?: Schedule;
+  scoreAnalysis?: ScoreAnalysisHardSoftScore;
 };
 
 export type Therapist = {

@@ -63,7 +63,7 @@ function App() {
     headers: { "Content-Type": "application/json" },
     queryParams: {},
   });
-
+  const sc = api.data?.schedule;
   return (
     <Page>
       {api.isLoading && <Loading>Loading</Loading>}
@@ -77,7 +77,7 @@ function App() {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {api.data?.patientList!.map((item) => (
+        {sc?.patientList!.map((item) => (
           <Circle
             weight={1}
             key={item.name}
@@ -95,7 +95,7 @@ function App() {
             </Popup>
           </Circle>
         ))}
-        {api.data?.therapistList!.map((item) => (
+        {sc?.therapistList!.map((item) => (
           <Circle
             key={item.name}
             center={[item.location!.latitude!, item.location!.longitude!]}
@@ -114,7 +114,7 @@ function App() {
             </Popup>
           </Circle>
         ))}
-        {api.data?.appointmentList?.map((item) => (
+        {sc?.appointmentList?.map((item) => (
           <Polyline
             weight={2}
             pathOptions={{
@@ -217,7 +217,7 @@ function App() {
         ))}
       </MapContainer>
 
-      <table border={1} style={{outline:"none"}}>
+      <table border={1} style={{ outline: "none" }}>
         <thead>
           <tr>
             <td>Patient</td>
@@ -228,13 +228,14 @@ function App() {
         </thead>
         <tbody>
           {api.data &&
-            api.data?.appointmentList?.map((item) => (
+            sc
+            ?.appointmentList?.map((item) => (
               <tr key={item.id}>
-                 <td>
-                  <p>{item.patient?.name} ({item.patient?.therapyType})</p>
-                  <div
-                    style={{ width: 500, padding: "10px" }}
-                  >
+                <td>
+                  <p>
+                    {item.patient?.name} ({item.patient?.therapyType})
+                  </p>
+                  <div style={{ width: 500, padding: "10px" }}>
                     {Object.entries(
                       (item.patient?.availability ?? []).reduce(
                         (acc: IMap, x) => {
@@ -297,10 +298,10 @@ function App() {
                   </div>
                 </td>
                 <td>
-                  <p>{item.therapist?.name}({item.therapist?.skills?.join(", ")})</p>
-                  <div
-                    style={{ width: 500, padding: "10px" }}
-                  >
+                  <p>
+                    {item.therapist?.name}({item.therapist?.skills?.join(", ")})
+                  </p>
+                  <div style={{ width: 500, padding: "10px" }}>
                     {Object.entries(
                       (item.therapist?.availability ?? []).reduce(
                         (acc: IMap, x) => {
@@ -362,7 +363,7 @@ function App() {
                     ))}
                   </div>
                 </td>
-               
+
                 <td>{item.patient?.therapyType}</td>
                 <td>{dayjs(item.timeslot?.date).format("DD MMM,YYYY")}</td>
               </tr>
@@ -370,7 +371,7 @@ function App() {
         </tbody>
       </table>
 
-      <pre>{JSON.stringify(api.data?.appointmentList, null, 2)}</pre>
+      <pre>{JSON.stringify(api.data?.scoreAnalysis, null, 2)}</pre>
     </Page>
   );
 

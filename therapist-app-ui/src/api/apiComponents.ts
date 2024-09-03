@@ -14,22 +14,22 @@ export type RunError = Fetcher.ErrorWrapper<undefined>;
 export type RunVariables = ApiContext["fetcherOptions"];
 
 export const fetchRun = (variables: RunVariables, signal?: AbortSignal) =>
-  apiFetch<Schemas.Schedule, RunError, undefined, {}, {}, {}>({
+  apiFetch<Schemas.SolveResponse, RunError, undefined, {}, {}, {}>({
     url: "/run",
     method: "get",
     ...variables,
     signal,
   });
 
-export const useRun = <TData = Schemas.Schedule,>(
+export const useRun = <TData = Schemas.SolveResponse,>(
   variables: RunVariables,
   options?: Omit<
-    reactQuery.UseQueryOptions<Schemas.Schedule, RunError, TData>,
+    reactQuery.UseQueryOptions<Schemas.SolveResponse, RunError, TData>,
     "queryKey" | "queryFn" | "initialData"
   >,
 ) => {
   const { fetcherOptions, queryOptions, queryKeyFn } = useApiContext(options);
-  return reactQuery.useQuery<Schemas.Schedule, RunError, TData>({
+  return reactQuery.useQuery<Schemas.SolveResponse, RunError, TData>({
     queryKey: queryKeyFn({ path: "/run", operationId: "run", variables }),
     queryFn: ({ signal }) =>
       fetchRun({ ...fetcherOptions, ...variables }, signal),

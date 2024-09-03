@@ -2,6 +2,7 @@ package com.sc.therapist_appointments.web;
 
 
 import com.sc.therapist_appointments.domain.Schedule;
+import com.sc.therapist_appointments.domain.SolveResponse;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,7 +27,7 @@ public class HomeController {
     }
 
     @GetMapping("/run")
-    public Schedule run() throws ExecutionException, InterruptedException {
+    public SolveResponse run() throws ExecutionException, InterruptedException {
         return runSolver();
 
     }
