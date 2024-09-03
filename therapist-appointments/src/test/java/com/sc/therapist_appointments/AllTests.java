@@ -45,7 +45,7 @@ class AllTests {
 
     @ParameterizedTest
     @MethodSource("getAppointments")
-    @DisplayName(value = "Check if all patients have an appointment with therapists within their max travel distance")
+    @DisplayName(value = "Must be < travel distance of the therapist")
     void validateDistance(Appointment appointment) throws Exception {
 
 
@@ -60,7 +60,7 @@ class AllTests {
 
     @ParameterizedTest
     @MethodSource("getAppointments")
-    @DisplayName(value = "Check if all patients have an appointments within their availability")
+    @DisplayName(value = "Must match patient/therapist availability")
     public void validateAppointmentSlots(Appointment appointment) {
         System.out.println("Appointment Picked as: " + appointment.getTimeslot());
         System.out.println("------------------------------------------------------------------------");
@@ -85,14 +85,14 @@ class AllTests {
 
     @ParameterizedTest
     @MethodSource("getAppointments")
-    @DisplayName(value = "Check if all patients have an appointments matched to the right skill of the therapist")
+    @DisplayName(value = "Must match right skill of the therapist")
     public void validateAppointmentSkills(Appointment appointment) {
 
         assertThat(appointment.getTherapist().getSkills()).contains(appointment.getPatient().getTherapyType());
     }
 
     @Test
-    @DisplayName(value = "Check if patient is being prioritized based on criticality")
+    @DisplayName(value = "Prioritized based on criticality")
     public void validateCriticality() {
         var sortedAppointments = getAppointments().stream()
                                                   .sorted(Comparator.comparing(appointment -> appointment.getTimeslot()
