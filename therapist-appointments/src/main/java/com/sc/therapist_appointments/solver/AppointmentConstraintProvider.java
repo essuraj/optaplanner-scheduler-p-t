@@ -66,12 +66,12 @@ public class AppointmentConstraintProvider implements ConstraintProvider {
 
     private Constraint matchTherapyType(ConstraintFactory constraintFactory) {
         return constraintFactory.forEach(Appointment.class)
-                                .reward(HardSoftScore.ONE_HARD,
+                                .penalize(HardSoftScore.ofHard(100),
                                         appointment -> appointment.getTherapist()
                                                                   .getSkills()
                                                                   .contains(
                                                                           appointment.getPatient()
-                                                                                     .getTherapyType()) ? 2 : 0)
+                                                                                     .getTherapyType())? 0 : 1)
 
                                 .asConstraint("Missing therapy type");
     }
@@ -87,7 +87,7 @@ public class AppointmentConstraintProvider implements ConstraintProvider {
 
     private Constraint maxTravelDistance(ConstraintFactory constraintFactory) {
         return constraintFactory.forEach(Appointment.class)
-                                .reward(HardSoftScore.ONE_HARD, appointment -> {
+                                .penalize(HardSoftScore.ONE_HARD, appointment -> {
                                     var distance = (LatLngTool.distance(
                                             appointment.getTherapist()
                                                        .getLocation(),
@@ -95,7 +95,7 @@ public class AppointmentConstraintProvider implements ConstraintProvider {
                                                        .getLocation(),
                                             LengthUnit.KILOMETER));
                                     return appointment.getTherapist()
-                                                      .getMaxTravelDistanceKm() > distance ? 2 : 0;
+                                                      .getMaxTravelDistanceKm() < distance ? 2 : 0;
                                 })
                                 .asConstraint("Max Travel Distance");
     }

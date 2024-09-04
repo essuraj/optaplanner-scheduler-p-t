@@ -215,7 +215,25 @@ function App() {
             </Tooltip>
           </Polyline>
         ))}
-      </MapContainer>
+      </MapContainer> 
+      <table border={1} style={{ outline: "none" }}>
+        <thead>
+          <tr>
+            <td>Constraint</td>
+            <td>Type</td>
+            <td>Hard/Soft</td>
+            <td>Appointment Date</td>
+          </tr>
+        </thead>
+        <tbody>
+          {Object.values(api.data?.scoreAnalysis?.constraintMap??{}).map(c=>(<tr>
+            <td>{c.constraintRef?.constraintName}</td>
+            <td>{c.weight?.hardScore===0?"soft":"hard"}</td>
+            <td>{c.score?.hardScore}</td>
+
+          </tr>))}
+          </tbody></table>
+      <pre>{JSON.stringify(api.data?.scoreAnalysis, null, 2)}</pre>
 
       <table border={1} style={{ outline: "none" }}>
         <thead>
@@ -371,7 +389,7 @@ function App() {
         </tbody>
       </table>
 
-      <pre>{JSON.stringify(api.data?.scoreAnalysis, null, 2)}</pre>
+     
     </Page>
   );
 

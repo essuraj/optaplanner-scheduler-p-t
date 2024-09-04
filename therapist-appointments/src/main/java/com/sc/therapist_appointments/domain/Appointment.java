@@ -17,10 +17,11 @@ public class Appointment {
     //    @PlanningVariable(valueRangeProviderRefs = "patientRange")
     private Patient patient;
 
-    @PlanningVariable(valueRangeProviderRefs = "therapistRange")
+    @PlanningVariable(valueRangeProviderRefs = "therapistRange",
+            allowsUnassigned=true)
     private Therapist therapist;
 
-    @PlanningVariable(valueRangeProviderRefs = "timeslotRange")
+    @PlanningVariable(valueRangeProviderRefs = "timeslotRange", allowsUnassigned = true)
     private Timeslot timeslot;
 
     public Appointment() {

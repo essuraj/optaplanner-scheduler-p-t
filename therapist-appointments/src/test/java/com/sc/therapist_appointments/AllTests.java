@@ -5,10 +5,7 @@ import com.javadocmd.simplelatlng.util.LengthUnit;
 import com.sc.therapist_appointments.domain.Appointment;
 import com.sc.therapist_appointments.domain.Schedule;
 import com.sc.therapist_appointments.web.HomeController;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +32,7 @@ class AllTests {
     }
 
     @Test
+    @Order(1)
     void initSuccess() throws ExecutionException, InterruptedException {
         assertThat(controller).isNotNull();
     }
@@ -45,9 +43,21 @@ class AllTests {
 
     @ParameterizedTest
     @MethodSource("getAppointments")
+    @Order(2)
+    @DisplayName(value = "Must solve all appointments")
+    void appointmentsSolved(Appointment appointment) throws Exception {
+        assertThat(appointment.getTherapist()).isNotNull();
+        assertThat(appointment.getTimeslot()).isNotNull();
+
+    }
+
+    @ParameterizedTest
+    @MethodSource("getAppointments")
+    @Order(3)
     @DisplayName(value = "Must be < travel distance of the therapist")
     void validateDistance(Appointment appointment) throws Exception {
-
+        assertThat(appointment.getTherapist()).isNotNull();
+        assertThat(appointment.getTimeslot()).isNotNull();
 
         assertThat((LatLngTool.distance(appointment.getTherapist()
                                                    .getLocation(),
@@ -61,8 +71,12 @@ class AllTests {
 
     @ParameterizedTest
     @MethodSource("getAppointments")
+    @Order(4)
     @DisplayName(value = "Must match patient/therapist availability")
     public void validateAppointmentSlots(Appointment appointment) {
+        assertThat(appointment.getTherapist()).isNotNull();
+        assertThat(appointment.getTimeslot()).isNotNull();
+
         System.out.println("Appointment Picked as: " + appointment.getTimeslot());
         System.out.println(
                 "------------------------------------------------------------------------");
@@ -93,8 +107,10 @@ class AllTests {
     @ParameterizedTest
     @MethodSource("getAppointments")
     @DisplayName(value = "Must match right skill of the therapist")
+    @Order(5)
     public void validateAppointmentSkills(Appointment appointment) {
-
+        assertThat(appointment.getTherapist()).isNotNull();
+        assertThat(appointment.getTimeslot()).isNotNull();
         assertThat(appointment.getTherapist()
                               .getSkills()).contains(appointment.getPatient()
                                                                 .getTherapyType());
@@ -102,6 +118,7 @@ class AllTests {
 
     @Test
     @DisplayName(value = "Prioritized based on criticality")
+    @Order(6)
     public void validateCriticality() {
         var sortedAppointments = getAppointments().stream()
                                                   .sorted(Comparator.comparing(

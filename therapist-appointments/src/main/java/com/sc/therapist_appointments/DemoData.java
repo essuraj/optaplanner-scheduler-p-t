@@ -247,6 +247,7 @@ public class DemoData {
                          System.out.println("--------> " + constraintId + " = " + scorePerConstraint);
                          constraintAnalysis.matches().forEach(matchAnalysis -> {
                              HardSoftScore scorePerMatch = matchAnalysis.score();
+
                              var justification = matchAnalysis.justification();
                              System.out.println(justification);
                              System.err.println(scorePerMatch);
@@ -259,8 +260,8 @@ public class DemoData {
 //        System.out.println(solverManager.);
 
         // Visualize the solution
-//        printScheduleSimple(solvedSchedule);
-        printSchedule(solvedSchedule);
+        printScheduleSimple(solvedSchedule);
+//        printSchedule(solvedSchedule);
 
         // Extract the next available appointment
 

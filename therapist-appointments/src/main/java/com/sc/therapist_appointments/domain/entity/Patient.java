@@ -81,7 +81,7 @@ public class Patient {
 
     @Override
     public String toString() {
-        return "PA {" + "name='" + name + '\'' + ", therapy" + "='" + therapyType + '\'' + ", location='" + location + '\'' + ", criticality=" + criticality + '}';
+        return "PA {" + "name='" + name + '\'' + ", therapy" + "='" + therapyType + '\'' + ", criticality=" + criticality + '}';
     }
 
 }
