@@ -58,7 +58,6 @@ export type LatLng = {
    * @format double
    */
   longitude?: number;
-  polar?: boolean;
   /**
    * @format int64
    */
@@ -67,6 +66,7 @@ export type LatLng = {
    * @format int64
    */
   longitudeInternal?: number;
+  polar?: boolean;
 };
 
 export type LocalTime = {

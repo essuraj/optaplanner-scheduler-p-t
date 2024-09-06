@@ -1,26 +1,11 @@
 import { MapContainer } from "react-leaflet/MapContainer";
-import {
-  Circle,
-  Marker,
-  Polyline,
-  Popup,
-  TileLayer,
-  Tooltip,
-} from "react-leaflet";
+import { Circle, Polyline, Popup, TileLayer, Tooltip } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import { useDemoData, useRun } from "./api/apiComponents";
+import { useRun } from "./api/apiComponents";
 import dayjs from "dayjs";
-import { Appointment, LocalTime } from "./api/apiSchemas";
-import {
-  Badge,
-  Card,
-  Divider,
-  Loading,
-  Page,
-  Table,
-  Text,
-} from "@geist-ui/core";
-
+import { Appointment } from "./api/apiSchemas";
+import { Box, Chip, Spinner } from "@prismane/core";
+ 
 export interface Coordinates {
   latitude: number;
   longitude: number;
@@ -65,10 +50,10 @@ function App() {
   });
   const sc = api.data?.schedule;
   return (
-    <Page>
-      {api.isLoading && <Loading>Loading</Loading>}
+    <Box>
+      {api.isLoading && <Spinner size={"lg"} />}
       <div>{/* {api.data?.patientList!.map((item) => ())} */}</div>
-      <MapContainer
+      {/* <MapContainer
         center={[17.419227, 78.510442]}
         zoom={13}
         scrollWheelZoom={false}
@@ -103,9 +88,7 @@ function App() {
             radius={500}
             weight={1}
           >
-            {/* <Tooltip direction="left" offset={[0, 0]} opacity={1} permanent>
-            <small> {item.skills?.join(",")}</small>
-            </Tooltip> */}
+    
 
             <Popup>
               <pre>
@@ -169,7 +152,7 @@ function App() {
                       style={{ width: 300, display: "flex", flexWrap: "wrap" }}
                     >
                       {times.map((time, index) => (
-                        <Badge
+                        <Chip
                           marginRight={0.5}
                           type={
                             dayjs(item.timeslot?.date).format("DD MMM,YYYY") ===
@@ -182,7 +165,7 @@ function App() {
                           key={index}
                         >
                           <small>{(time as string).substring(0, 5)}</small>
-                        </Badge>
+                        </Chip>
                       ))}
                     </div>
                   </div>
@@ -215,24 +198,48 @@ function App() {
             </Tooltip>
           </Polyline>
         ))}
-      </MapContainer> 
+      </MapContainer> */}
       <table border={1} style={{ outline: "none" }}>
         <thead>
           <tr>
             <td>Constraint</td>
             <td>Type</td>
             <td>Hard/Soft</td>
-            <td>Appointment Date</td>
+            <td>Justification</td>
+            <td>Appointment</td>
           </tr>
         </thead>
         <tbody>
-          {Object.values(api.data?.scoreAnalysis?.constraintMap??{}).map(c=>(<tr>
-            <td>{c.constraintRef?.constraintName}</td>
-            <td>{c.weight?.hardScore===0?"soft":"hard"}</td>
-            <td>{c.score?.hardScore}</td>
+          {Object.values(api.data?.scoreAnalysis?.constraintMap ?? {}).map(
+            (c) => {
+           
+              return (
+                <tr>
+                  <td>{c.constraintRef?.constraintName}</td>
+                  <td>{makeTable(c.score)}</td>
+                  <td>{c.weight?.hardScore === 0 ? "soft" : "hard"}</td>
 
-          </tr>))}
-          </tbody></table>
+                  <td>{c.matches?.map(x => {
+                    return (<div key={String(x)}>
+                      {makeTable(x.justification?.["impact"])}
+                    
+                    </div>);
+                  })}</td>
+                
+                <td>{c.matches?.map(x => {
+                     const fact:Appointment=  x.justification?.["facts"][0];
+                    return (<div key={String(x)}>
+                    
+                      <p>{fact.patient?.name} ----- {fact.therapist?.name??"N/A"}</p>
+                      <small>{fact.timeslot?.date??"N/A"} {String(fact.timeslot?.startTime??"-")}</small>
+                    </div>);
+                  })}</td>
+                </tr>
+              );
+            }
+          )}
+        </tbody>
+      </table>
       <pre>{JSON.stringify(api.data?.scoreAnalysis, null, 2)}</pre>
 
       <table border={1} style={{ outline: "none" }}>
@@ -241,13 +248,12 @@ function App() {
             <td>Patient</td>
             <td>Therapist</td>
             <td>Therapy Type</td>
-            <td>Appointment Date</td>
+            <td>Appointment</td>
           </tr>
         </thead>
         <tbody>
           {api.data &&
-            sc
-            ?.appointmentList?.map((item) => (
+            sc?.appointmentList?.map((item) => (
               <tr key={item.id}>
                 <td>
                   <p>
@@ -268,24 +274,29 @@ function App() {
                       )
                     ).map(([date, times]) => (
                       <div key={date}>
-                        <p
-                          style={{
-                            fontWeight:
-                              dayjs(item.timeslot?.date).format(
-                                "DD MMM,YYYY"
-                              ) === date
-                                ? "bold"
-                                : "normal",
-                          }}
-                        >
-                          {dayjs(item.timeslot?.date).format("DD MMM,YYYY") ===
-                          date ? (
-                            <span>✅</span>
-                          ) : (
-                            <span>🚫</span>
-                          )}
-                          &nbsp;{date}
-                        </p>
+                        {item.timeslot ? (
+                          <p
+                            style={{
+                              fontWeight:
+                                dayjs(item.timeslot?.date).format(
+                                  "DD MMM,YYYY"
+                                ) === date
+                                  ? "bold"
+                                  : "normal",
+                            }}
+                          >
+                            {dayjs(item.timeslot?.date).format(
+                              "DD MMM,YYYY"
+                            ) === date ? (
+                              <span>✅</span>
+                            ) : (
+                              <span>🚫</span>
+                            )}
+                            &nbsp;{date}
+                          </p>
+                        ) : (
+                          "N/A"
+                        )}
                         <div
                           style={{
                             width: 300,
@@ -293,23 +304,26 @@ function App() {
                             flexWrap: "wrap",
                           }}
                         >
-                          {times.map((time, index) => (
-                            <Badge
-                              marginRight={0.5}
-                              type={
-                                dayjs(item.timeslot?.date).format(
-                                  "DD MMM,YYYY"
-                                ) === date &&
-                                JSON.stringify(time) ===
-                                  JSON.stringify(item.timeslot?.startTime)
-                                  ? "success"
-                                  : "secondary"
-                              }
-                              key={index}
-                            >
-                              <small>{(time as string).substring(0, 5)}</small>
-                            </Badge>
-                          ))}
+                          {item.timeslot &&
+                            times.map((time, index) => (
+                              <Chip
+                                mr={0.5}
+                                color={
+                                  dayjs(item.timeslot?.date).format(
+                                    "DD MMM,YYYY"
+                                  ) === date &&
+                                  JSON.stringify(time) ===
+                                    JSON.stringify(item.timeslot?.startTime)
+                                    ? "green"
+                                    : "red"
+                                }
+                                key={index}
+                              >
+                                <small>
+                                  {(time as string).substring(0, 5)}
+                                </small>
+                              </Chip>
+                            ))}
                         </div>
                       </div>
                     ))}
@@ -360,21 +374,21 @@ function App() {
                           }}
                         >
                           {times.map((time, index) => (
-                            <Badge
-                              marginRight={0.5}
-                              type={
+                            <Chip
+                              mr={1}
+                              color={
                                 dayjs(item.timeslot?.date).format(
                                   "DD MMM,YYYY"
                                 ) === date &&
                                 JSON.stringify(time) ===
                                   JSON.stringify(item.timeslot?.startTime)
-                                  ? "success"
-                                  : "secondary"
+                                  ? "green"
+                                  : "red"
                               }
                               key={index}
                             >
                               <small>{(time as string).substring(0, 5)}</small>
-                            </Badge>
+                            </Chip>
                           ))}
                         </div>
                       </div>
@@ -388,9 +402,7 @@ function App() {
             ))}
         </tbody>
       </table>
-
-     
-    </Page>
+    </Box>
   );
 
   function howFar(item: Appointment) {
@@ -408,3 +420,19 @@ function App() {
 }
 
 export default App;
+
+function makeTable(data: any) {
+  const keys = Object.keys(data ?? {});
+  return (
+    <table>
+      <tbody>
+        {keys.map((key) => (
+          <tr>
+            <th>{key}</th>
+            <td>{String(data[key])}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}

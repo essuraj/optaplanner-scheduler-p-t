@@ -2,13 +2,13 @@ import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { GeistProvider } from "@geist-ui/core";
 const queryClient = new QueryClient();
+import { PrismaneProvider } from "@prismane/core";
 
 createRoot(document.getElementById("root")!).render(
-  <GeistProvider>
+  <PrismaneProvider>
     <QueryClientProvider client={queryClient}>
       <App />
     </QueryClientProvider>
-  </GeistProvider>
+  </PrismaneProvider>
 );

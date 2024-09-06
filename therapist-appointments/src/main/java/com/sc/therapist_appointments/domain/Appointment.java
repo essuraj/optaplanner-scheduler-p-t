@@ -7,6 +7,7 @@ import ai.timefold.solver.core.api.domain.variable.PlanningVariable;
 import com.sc.therapist_appointments.domain.entity.Patient;
 import com.sc.therapist_appointments.domain.entity.Therapist;
 import com.sc.therapist_appointments.domain.entity.Timeslot;
+import org.springframework.lang.Nullable;
 
 @PlanningEntity
 public class Appointment {
@@ -19,9 +20,11 @@ public class Appointment {
 
     @PlanningVariable(valueRangeProviderRefs = "therapistRange",
             allowsUnassigned=true)
+    @Nullable
     private Therapist therapist;
 
     @PlanningVariable(valueRangeProviderRefs = "timeslotRange", allowsUnassigned = true)
+    @Nullable
     private Timeslot timeslot;
 
     public Appointment() {

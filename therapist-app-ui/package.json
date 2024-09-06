@@ -11,9 +11,9 @@
     "api": "openapi-codegen gen api"
   },
   "dependencies": {
-    "@geist-ui/core": "^2.3.8",
     "@openapi-codegen/cli": "^2.0.2",
     "@openapi-codegen/typescript": "^8.0.2",
+    "@prismane/core": "^1.6.0",
     "@tanstack/react-query": "^5.52.1",
     "dayjs": "^1.11.13",
     "leaflet": "^1.9.4",
