@@ -53,7 +53,7 @@ function App() {
     <Box>
       {api.isLoading && <Spinner size={"lg"} />}
       <div>{/* {api.data?.patientList!.map((item) => ())} */}</div>
-      {/* <MapContainer
+    <MapContainer
         center={[17.419227, 78.510442]}
         zoom={13}
         scrollWheelZoom={false}
@@ -150,17 +150,17 @@ function App() {
                     </p>
                     <div
                       style={{ width: 300, display: "flex", flexWrap: "wrap" }}
-                    >
+                    > 
                       {times.map((time, index) => (
                         <Chip
-                          marginRight={0.5}
-                          type={
+                          mr={2}
+                          color={
                             dayjs(item.timeslot?.date).format("DD MMM,YYYY") ===
                               date &&
                             JSON.stringify(time) ===
                               JSON.stringify(item.timeslot?.startTime)
-                              ? "success"
-                              : "secondary"
+                              ? "green"
+                              : "red"
                           }
                           key={index}
                         >
@@ -198,7 +198,7 @@ function App() {
             </Tooltip>
           </Polyline>
         ))}
-      </MapContainer> */}
+      </MapContainer>  
       <table border={1} style={{ outline: "none" }}>
         <thead>
           <tr>

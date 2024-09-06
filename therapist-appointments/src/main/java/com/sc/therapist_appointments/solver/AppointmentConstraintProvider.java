@@ -66,12 +66,12 @@ public class AppointmentConstraintProvider implements ConstraintProvider {
 
     private Constraint matchTherapyType(ConstraintFactory constraintFactory) {
         return constraintFactory.forEach(Appointment.class)
-                                .penalize(HardSoftScore.ofHard(100),
+                                .penalize(HardSoftScore.ONE_HARD,
                                         appointment -> appointment.getTherapist()
                                                                   .getSkills()
                                                                   .contains(
                                                                           appointment.getPatient()
-                                                                                     .getTherapyType())? 0 : 1)
+                                                                                     .getTherapyType())? 0 : 3)
 
                                 .asConstraint("Missing therapy type");
     }
