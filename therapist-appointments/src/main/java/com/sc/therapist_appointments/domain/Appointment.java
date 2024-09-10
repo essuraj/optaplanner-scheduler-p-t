@@ -4,6 +4,7 @@ package com.sc.therapist_appointments.domain;
 import ai.timefold.solver.core.api.domain.entity.PlanningEntity;
 import ai.timefold.solver.core.api.domain.lookup.PlanningId;
 import ai.timefold.solver.core.api.domain.variable.PlanningVariable;
+import com.google.ortools.sat.IntVar;
 import com.sc.therapist_appointments.domain.entity.Patient;
 import com.sc.therapist_appointments.domain.entity.Therapist;
 import com.sc.therapist_appointments.domain.entity.Timeslot;
@@ -26,7 +27,7 @@ public class Appointment {
     @PlanningVariable(valueRangeProviderRefs = "timeslotRange" )
     @Nullable
     private Timeslot timeslot;
-
+    private IntVar appointmentVar;
     public Appointment() {
     }
 
@@ -38,12 +39,23 @@ public class Appointment {
         this.patient = patient;
     }
 
-    public Appointment(long id, Therapist therapist, Patient patient, Timeslot timeslot) {
+    public Appointment(
+            Therapist therapist, Patient patient, Timeslot timeslot) {
 
-        this.id = id;
+        this.id = (long) (Math.random() * 10000);
         this.patient = patient;
         this.therapist = therapist;
         this.timeslot = timeslot;
+    }
+
+    public Appointment(
+            Therapist therapist, Patient patient, Timeslot timeslot, IntVar appointmentVar) {
+
+        this.id = (long) (Math.random() * 10000);
+        this.patient = patient;
+        this.therapist = therapist;
+        this.timeslot = timeslot;
+        this.appointmentVar = appointmentVar;
     }
 
     // Getters and setters
@@ -87,4 +99,11 @@ public class Appointment {
     }
 
 
+    public IntVar getAppointmentVar() {
+        return appointmentVar;
+    }
+
+    public void setAppointmentVar(IntVar appointmentVar) {
+        this.appointmentVar = appointmentVar;
+    }
 }
